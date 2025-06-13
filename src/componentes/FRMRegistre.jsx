@@ -6,7 +6,8 @@ const FRMregistro =() => {
 
     return(
             <div className="container-FRM">
-                <h2>Bienvenido a la app de limpieza</h2>
+                <div classname="titulo1"><h1>Limpieza continua</h1></div>
+                <div classname="titulo2"><h2>Bienvenido a la app de limpieza</h2></div>
                 <div className="botongoogle" >
                      <button onClick={() => alert('!hiciste click!')}>
                      google
