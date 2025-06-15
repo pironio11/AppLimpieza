@@ -1,6 +1,5 @@
 
 
-
 body{
     /* margin: 15px; */
     background-color: lightgray;
@@ -13,6 +12,7 @@ body{
     margin-top: 15px;
     width: 50%;
     border-radius: 5%;
+    margin-top: 5%;
 }
 
 button{
@@ -23,4 +23,15 @@ button{
     height: 30%;
     width: 30%;
     border-width: 2px;
+}
+
+.fotoEpet img{
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+}
+.fotoEpet{
+    border-width: 15px;
+    border-color: black;
+    padding: 20px;
 }
