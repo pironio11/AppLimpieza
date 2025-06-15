@@ -16,11 +16,11 @@ body{
 }
 
 button{
-    background: rgb(40, 126, 184);
+    background: rgb(255, 255, 255);
     margin-top: 5%;
     margin-bottom: 5%;
     border-radius: 8%;
-    height: 30%;
+    height: 50px;
     width: 30%;
     border-width: 2px;
 }
