@@ -1,0 +1,43 @@
+.Generalfooter {
+    background-color: #3b3b3b; /* Mismo color que navbar */
+    color: #fff;
+    display: grid;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    align-items: center;
+    justify-items: center;
+    text-align: center;
+    gap: 1rem;
+    padding: 1rem 2rem; /* menos alto */
+}
+
+.FooterItem h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.FooterItem ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.FooterItem a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.FooterItem a:hover {
+    text-decoration: underline;
+}
+
+.FooterBottom {
+    grid-column: 1 / -1; /* ocupa todo el ancho */
+    text-align: center;
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+}
