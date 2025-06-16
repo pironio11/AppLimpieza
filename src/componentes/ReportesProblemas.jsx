@@ -20,4 +20,5 @@ const ReportesProblemas = () => {
     </div>
   );
 };
+
 export default ReportesProblemas;

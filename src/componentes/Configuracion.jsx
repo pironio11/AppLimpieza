@@ -11,4 +11,5 @@ const Configuracion = () => {
     </div>
   );
 };
+
 export default Configuracion;
