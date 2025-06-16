@@ -5,11 +5,10 @@ const Footer = () => {
   return (
     <footer className="Generalfooter">
 
-        <h3>Contacto</h3>
-        <p>Soporte técnico disponible</p>
-        <p>Email: soporte@limpieza.com</p>
-      
-      <p className="FooterBottom">&copy; {new Date().getFullYear()} Sistema de Limpieza. Todos los derechos reservados.</p>
+        <div className='tituloF'><h3>Contacto</h3></div>
+        <div className='soporteF'><p>Soporte técnico disponible</p></div>
+        <div className='emailF'><p>Email: soporte@limpieza.com</p></div>
+        <div className="FooterBottom"><p>&copy; {new Date().getFullYear()} Sistema de Limpieza. Todos los derechos reservados.</p></div>
     </footer>
   );
 };
