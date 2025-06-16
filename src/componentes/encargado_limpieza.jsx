@@ -1,9 +1,13 @@
 import React from "react";
 import './estilos/encargado.css';  
 import avatar from '../imagenes/logoepet.jpg';
+import Navbar from './navbar';
+import Footer from './footer';
 
 const EncargadoLimpieza = () => {
   return (
+    <div>
+      <Navbar />
   <div className="GeneralEncargadoLimpieza">
     <div className="tituloinfo">
       <img src={avatar} alt="Encargado" className="fotoPerfil" />
@@ -24,7 +28,9 @@ const EncargadoLimpieza = () => {
         </button>
       </div>
     </div>
-  </div>
+    <Footer />
+    </div>
+    </div>
   );
 };
 
