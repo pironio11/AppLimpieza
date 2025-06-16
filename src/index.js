@@ -4,11 +4,13 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import FRMRegistre from './componentes/FRMRegistre';
+import ReportesProblemas from './componentes/ReportesProblemas';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <FRMRegistre />
+    <ReportesProblemas/>
   </React.StrictMode>
 );
 
