@@ -5,6 +5,8 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import FRMRegistre from './componentes/FRMRegistre';
 import ReportesProblemas from './componentes/ReportesProblemas';
+import Configuracion from './componentes/Configuracion';
+
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
