@@ -1,0 +1,18 @@
+.GeneralEncargadoLimpieza {
+    display: grid;
+    grid-template-rows: auto auto auto; 
+    row-gap: 1rem;
+    justify-items: center;
+    width: 50%;
+    background-color: #f5f5f5;
+    padding: 1rem;
+    border-radius: 1rem;
+    justify-content: center;
+    margin: 2rem auto; /* centra horizontalmente el contenedor */
+}
+
+.tituloinfo {
+    display: grid;
+    place-items: center;
+    row-gap: 0.5rem;
+}

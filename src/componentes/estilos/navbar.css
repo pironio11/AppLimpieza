@@ -1,0 +1,27 @@
+.GeneralNavbar {
+    background-color: #3b3b3b;
+    color: #fff;
+    display: grid;
+    grid-template-columns: 1fr auto; /* Título ocupa todo el espacio, botón al final */
+    column-gap: 1rem;
+    align-items: center;
+    padding: 1rem;
+}
+
+.TituloNavbar {
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: left; /* Mantener alineación del título */
+}
+
+.CerrarSesion {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    justify-self: end; /* Coloca el botón en la última columna */
+    
+}
+
+
