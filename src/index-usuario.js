@@ -10,7 +10,7 @@ root.render(
 );
 /* Modificar archivos.
 
-Hacer git add, git commit, y git push como siempre.
+Hacer git add, git commit, git pull y git push como siempre.
 
 Y si necesitás hacer pull, ya no te va a bloquear por un merge inconcluso.
 */
