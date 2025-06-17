@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
+import Usuario from './componentes/usuario';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
@@ -16,12 +17,12 @@ import reportWebVitals from './reportWebVitals';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-
-    <App />
-    
-
-    
-
+<<<<<<< HEAD
+    <FRMRegistre />
+    <Footer/>
+=======
+    <ReportesProblemas/>
+>>>>>>> reportesV0
   </React.StrictMode>
 );
 
