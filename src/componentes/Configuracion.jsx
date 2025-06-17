@@ -1,5 +1,6 @@
 import React from 'react';
 import './estilos/Configuracion.css';
+import './footer';
 
 const Configuracion = () => {
   return (

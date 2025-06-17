@@ -1,8 +1,13 @@
 import React from "react";
-import './estilos/ReportesProblemas.css';  
+import './estilos/ReportesProblemas.css';
+import './footer';
+import './navbar';
+import Navbar from "./navbar";
 
 const ReportesProblemas = () => {
   return (
+    <div>
+      <Navbar/>
     <div className="reportes-container">
       <h2>Reportes / Problemas</h2>
       <div className="reporte">
@@ -18,6 +23,8 @@ const ReportesProblemas = () => {
         <p className="fecha">17 abr</p>
       </div>
     </div>
+    <footer/>
+</div>
   );
 };
 
