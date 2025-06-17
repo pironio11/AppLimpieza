@@ -5,11 +5,14 @@ import Usuario from './componentes/usuario';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import FRMRegistre from './componentes/FRMRegistre';
+import Footer from './componentes/footer';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Usuario/>
+  
   </React.StrictMode>
 );
 

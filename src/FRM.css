@@ -1,0 +1,37 @@
+
+
+body{
+    /* margin: 15px; */
+    background-color: lightgray;
+}
+
+.container-FRM{
+    text-align: center;
+    margin: auto ;
+    background-color: rgb(255, 255, 255);
+    margin-top: 15px;
+    width: 50%;
+    border-radius: 5%;
+    margin-top: 5%;
+}
+
+button{
+    background: rgb(255, 255, 255);
+    margin-top: 5%;
+    margin-bottom: 5%;
+    border-radius: 8%;
+    height: 50px;
+    width: 30%;
+    border-width: 2px;
+}
+
+.fotoEpet img{
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+}
+.fotoEpet{
+    border-width: 15px;
+    border-color: black;
+    padding: 20px;
+}
