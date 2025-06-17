@@ -1,5 +1,5 @@
 import React from "react";
-import frmstyle from "../estilos/FRM.css";
+import "./estilos/FRM.css";
 import epetfoto from '../imagenes/epetfoto.jpg';
 import googlefoto from '../imagenes/googleFoto.jpg';
 //aca se importan los datos que necesita el fotmulario
