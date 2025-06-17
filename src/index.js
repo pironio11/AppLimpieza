@@ -4,14 +4,24 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import FRMRegistre from './componentes/FRMRegistre';
+<<<<<<< HEAD
 import Footer from './componentes/footer';
+=======
+import ReportesProblemas from './componentes/ReportesProblemas';
+import Configuracion from './componentes/Configuracion';
+
+>>>>>>> reportesV0
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+<<<<<<< HEAD
     <FRMRegistre />
     <Footer/>
+=======
+    <ReportesProblemas/>
+>>>>>>> reportesV0
   </React.StrictMode>
 );
 
