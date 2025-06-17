@@ -8,3 +8,9 @@ root.render(
     <VistaUsuario />
   </React.StrictMode>
 );
+/* Modificar archivos.
+
+Hacer git add, git commit, y git push como siempre.
+
+Y si necesitás hacer pull, ya no te va a bloquear por un merge inconcluso.
+*/
