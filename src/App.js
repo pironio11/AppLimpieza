@@ -1,7 +1,8 @@
+
+
 import './App.css';
 import EncargadoLimpieza from './componentes/encargado_limpieza';
-import Footer from './componentes/footer';
-import Navbar from './componentes/navbar';
+import FRMregistro from './componentes/FRMRegistre';
 import ReportesProblemas from './componentes/ReportesProblemas';
 import Configuracion from './componentes/Configuracion';
 
@@ -11,10 +12,7 @@ function App() {
         <EncargadoLimpieza/>
         <ReportesProblemas/>
         <Configuracion/>
-        <Footer/>
-        <Navbar/>
-
-
+        <FRMregistro/>
         <header className="App-header">
         <p>
           Edit <code>src/App.js</code> and save to reload.

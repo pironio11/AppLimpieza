@@ -1,24 +1,28 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import Usuario from './componentes/usuario';
+
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import FRMRegistre from './componentes/FRMRegistre';
-<<<<<<< HEAD
-import Footer from './componentes/footer';
-=======
-import ReportesProblemas from './componentes/ReportesProblemas';
-import Configuracion from './componentes/Configuracion';
 
->>>>>>> reportesV0
+
+
+
+
+
+
+
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <FRMRegistre />
-    <Footer/>
+
+    <App />
+
+
+
+
   </React.StrictMode>
 );
 
