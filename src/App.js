@@ -5,6 +5,7 @@ import EncargadoLimpieza from './componentes/encargado_limpieza';
 import FRMregistro from './componentes/FRMRegistre';
 import ReportesProblemas from './componentes/ReportesProblemas';
 import Configuracion from './componentes/Configuracion';
+import Tareas from './componentes/tareas';
 
 function App() {
   return ( 
@@ -13,6 +14,7 @@ function App() {
         <ReportesProblemas/>
         <Configuracion/>
         <FRMregistro/>
+        <Tareas/>
         <header className="App-header">
         <p>
           Edit <code>src/App.js</code> and save to reload.
