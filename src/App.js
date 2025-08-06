@@ -6,12 +6,12 @@ import './App.css';
 // import ReportesProblemas from './componentes/ReportesProblemas';
 // import Configuracion from './componentes/Configuracion';
 import './App.css';
-import { Routes, Route } from 'react-router-dom';
-import EncargadoLimpieza from './componentes/encargado_limpieza';
-import FRMregistro from './componentes/FRMRegistre';
-import ReportesProblemas from './componentes/ReportesProblemas';
-import Configuracion from './componentes/Configuracion';
-import Navbar from './componentes/navbar'; // Si tienes un Navbar
+// import { Routes, Route } from 'react-router-dom';
+// import EncargadoLimpieza from './componentes/encargado_limpieza';
+// import FRMregistro from './componentes/FRMRegistre';
+// import ReportesProblemas from './componentes/ReportesProblemas';
+// import Configuracion from './componentes/Configuracion';
+// import Navbar from './componentes/navbar'; // Si tienes un Navbar
 
 
 function App() {
@@ -22,13 +22,13 @@ function App() {
         <ReportesProblemas/>
         <Configuracion/>
         <FRMregistro/> */}
-      <Navbar />
-      <Routes>
+      {/* <Navbar /> */}
+      {/* <Routes>
         <Route path="/" element={<EncargadoLimpieza />} />
         <Route path="/reportes" element={<ReportesProblemas />} />
         <Route path="/configuracion" element={<Configuracion />} />
         <Route path="/registro" element={<FRMregistro />} />
-      </Routes>
+      </Routes> */}
     </div>
   );
 }
