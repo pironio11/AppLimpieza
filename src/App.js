@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import FRMregistro from '../src/pages/FRMregistro';
-import VistaAdmin from './VistaAdmin';
-import VistaUsuario from './VistaUsuario';
+import VistaAdmin from './views/admin/VistaAdmin';
+import VistaUsuario from './views/usuario/VistaUsuario';
 import './App.css';
 
 

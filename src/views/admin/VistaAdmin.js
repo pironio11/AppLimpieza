@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Usuario from './componentes/usuario';
+import Usuario from '../../componentes/usuario';
 import './VistaAdmin.css';
 
 // INICIO SESIÓN 
