@@ -1,0 +1,341 @@
+/* Vista Usuario - Estilos principales */
+.vista-usuario {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+/* Header del usuario */
+.header-usuario {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.header-usuario h2 {
+  margin: 0 0 10px 0;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.header-usuario p {
+  margin: 0;
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+/* Acciones del usuario */
+.acciones-usuario {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.btn-nuevo-reporte {
+  background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3);
+}
+
+.btn-nuevo-reporte:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 184, 148, 0.4);
+}
+
+/* Formulario de nuevo reporte */
+.form-container {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border: 2px solid #e9ecef;
+}
+
+.form-container h3 {
+  color: #2c3e50;
+  margin-bottom: 25px;
+  font-size: 1.5rem;
+  text-align: center;
+  border-bottom: 2px solid #ecf0f1;
+  padding-bottom: 15px;
+}
+
+.reporte-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #34495e;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 12px 15px;
+  border: 2px solid #e9ecef;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  background-color: #fff;
+  resize: vertical;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.form-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+/* Sección de reportes */
+.reportes-section {
+  margin-bottom: 30px;
+}
+
+.reportes-section h3 {
+  color: #2c3e50;
+  margin-bottom: 25px;
+  font-size: 1.5rem;
+  text-align: center;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 10px;
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #7f8c8d;
+  padding: 40px;
+}
+
+/* Grid de reportes */
+.reportes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* Tarjetas de reportes */
+.reporte-card {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border-left: 5px solid #3498db;
+}
+
+.reporte-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.reporte-card.pendiente {
+  border-left-color: #e74c3c;
+}
+
+.reporte-card.en-proceso {
+  border-left-color: #f39c12;
+}
+
+.reporte-card.resuelto {
+  border-left-color: #27ae60;
+}
+
+.reporte-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.reporte-header h4 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.estado-badge {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.estado-badge.pendiente {
+  background-color: #fee;
+  color: #e74c3c;
+}
+
+.estado-badge.en-proceso {
+  background-color: #fef9e7;
+  color: #f39c12;
+}
+
+.estado-badge.resuelto {
+  background-color: #eafaf1;
+  color: #27ae60;
+}
+
+.problema {
+  font-size: 1rem;
+  color: #34495e;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.descripcion {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  margin-bottom: 15px;
+  line-height: 1.4;
+}
+
+.reporte-footer {
+  border-top: 1px solid #ecf0f1;
+  padding-top: 10px;
+}
+
+.fecha {
+  font-size: 0.85rem;
+  color: #95a5a6;
+}
+
+/* Botones */
+.btn-primary {
+  background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 184, 148, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 184, 148, 0.4);
+}
+
+.btn-cancel {
+  background: linear-gradient(135deg, #636e72 0%, #2d3436 100%);
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(99, 110, 114, 0.3);
+}
+
+.btn-cancel:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(99, 110, 114, 0.4);
+}
+
+/* Link de cerrar sesión */
+.link-inicio {
+  display: inline-block;
+  color: #e74c3c;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 12px 25px;
+  border: 2px solid #e74c3c;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  margin-top: 30px;
+  text-align: center;
+}
+
+.link-inicio:hover {
+  background-color: #e74c3c;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .vista-usuario {
+    padding: 15px;
+  }
+  
+  .header-usuario {
+    padding: 15px;
+  }
+  
+  .header-usuario h2 {
+    font-size: 1.5rem;
+  }
+  
+  .form-container {
+    padding: 20px;
+  }
+  
+  .reportes-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-buttons {
+    flex-direction: column;
+  }
+  
+  .form-buttons button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .vista-usuario {
+    padding: 10px;
+  }
+  
+  .header-usuario h2 {
+    font-size: 1.3rem;
+  }
+  
+  .reporte-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
