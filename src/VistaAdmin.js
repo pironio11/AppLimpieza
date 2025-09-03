@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Usuario from './componentes/usuario';
+import './VistaAdmin.css';
 
 // INICIO SESIÓN 
 function getSession() {
@@ -125,13 +126,13 @@ function Vista_Admin() {
   };
 
   return (
-    <div>
+    <div className="vista-admin">
       <Usuario />
       <h2>Lista de Usuarios</h2>
       {loading ? (
-        <p>Cargando...</p>
+        <p className="loading">Cargando...</p>
       ) : (
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <table className="users-table">
           <thead>
             <tr>
               <th>ID</th>
@@ -157,7 +158,7 @@ function Vista_Admin() {
                 <td>{u.estado}</td>
                 <td>{u.ultimaAccion}</td>
                 <td>
-                  <button onClick={() => setSelectedUser(u)}>
+                  <button className="btn-ver-perfil" onClick={() => setSelectedUser(u)}>
                     Ver perfil
                   </button>
                 </td>
@@ -166,67 +167,49 @@ function Vista_Admin() {
           </tbody>
         </table>
       )}
-      <Link to="/">Volver al inicio</Link>
+      <Link to="/" className="link-inicio">Volver al inicio</Link>
 
       {/* Modal para mostrar/editar/eliminar usuario */}
       {selectedUser && (
-        <div style={{
-          position: 'fixed',
-          top: 0, left: 0, right: 0, bottom: 0,
-          background: 'rgba(0,0,0,0.3)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1000
-        }}>
-          <div style={{
-            background: '#fff',
-            padding: '30px',
-            borderRadius: '10px',
-            minWidth: '300px',
-            boxShadow: '0 0 10px rgba(0,0,0,0.2)'
-          }}>
+        <div className="modal-overlay">
+          <div className="modal-content">
             <h3>Perfil de Usuario</h3>
             {editMode ? (
-              <div>
-                <label>
-                  Nombre:
+              <div className="edit-form">
+                <div className="form-group">
+                  <label>Nombre:</label>
                   <input
                     name="nombre"
                     value={editData.nombre}
                     onChange={handleChange}
                   />
-                </label>
-                <br />
-                <label>
-                  Apellido:
+                </div>
+                <div className="form-group">
+                  <label>Apellido:</label>
                   <input
                     name="apellido"
                     value={editData.apellido}
                     onChange={handleChange}
                   />
-                </label>
-                <br />
-                <label>
-                  DNI:
+                </div>
+                <div className="form-group">
+                  <label>DNI:</label>
                   <input
                     name="dni"
                     value={editData.dni}
                     onChange={handleChange}
                   />
-                </label>
-                <br />
-                <label>
-                  Email:
+                </div>
+                <div className="form-group">
+                  <label>Email:</label>
                   <input
                     name="email"
                     value={editData.email}
                     onChange={handleChange}
                   />
-                </label>
-                <br />
-                <label>
-                  Rol:
+                </div>
+                <div className="form-group">
+                  <label>Rol:</label>
                   <select
                     name="rol"
                     value={editData.rol}
@@ -235,21 +218,26 @@ function Vista_Admin() {
                     <option value="Usuario">Usuario</option>
                     <option value="Admin">Admin</option>
                   </select>
-                </label>
-                <br />
-                <button onClick={handleSaveEdit}>Guardar</button>
-                <button onClick={closeModal}>Cancelar</button>
+                </div>
+                <div className="modal-buttons">
+                  <button className="btn-primary" onClick={handleSaveEdit}>Guardar</button>
+                  <button className="btn-cancel" onClick={closeModal}>Cancelar</button>
+                </div>
               </div>
             ) : (
               <div>
-                <p><strong>Nombre:</strong> {selectedUser.nombre}</p>
-                <p><strong>Apellido:</strong> {selectedUser.apellido}</p>
-                <p><strong>DNI:</strong> {selectedUser.dni}</p>
-                <p><strong>Email:</strong> {selectedUser.email}</p>
-                <p><strong>Rol:</strong> {selectedUser.rol}</p>
-                <button onClick={handleEdit}>Editar</button>
-                <button onClick={handleDelete} style={{ marginLeft: '10px', color: 'red' }}>Eliminar</button>
-                <button onClick={closeModal} style={{ marginLeft: '10px' }}>Cerrar</button>
+                <div className="user-info">
+                  <p><strong>Nombre:</strong> {selectedUser.nombre}</p>
+                  <p><strong>Apellido:</strong> {selectedUser.apellido}</p>
+                  <p><strong>DNI:</strong> {selectedUser.dni}</p>
+                  <p><strong>Email:</strong> {selectedUser.email}</p>
+                  <p><strong>Rol:</strong> {selectedUser.rol}</p>
+                </div>
+                <div className="modal-buttons">
+                  <button className="btn-secondary" onClick={handleEdit}>Editar</button>
+                  <button className="btn-danger" onClick={handleDelete}>Eliminar</button>
+                  <button className="btn-cancel" onClick={closeModal}>Cerrar</button>
+                </div>
               </div>
             )}
           </div>
