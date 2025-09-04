@@ -5,7 +5,7 @@ import epetfoto from '../imagenes/epetfoto.jpg';
 import GoogleLogin from './GoogleLogin';
 //aca se importan los datos que necesita el fotmulario
 
-const FRMregistro =() => {
+const FRMregistro = () => {
     const navigate = useNavigate();
 
     const handleLogin = (tipoUsuario) => {
