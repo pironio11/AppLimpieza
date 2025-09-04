@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from 'react-router-dom';
 import "./estilos/FRM.css";
 import epetfoto from '../imagenes/epetfoto.jpg';
-import googlefoto from '../imagenes/googleFoto.jpg';
+import GoogleLogin from './GoogleLogin';
 //aca se importan los datos que necesita el fotmulario
 
 const FRMregistro =() => {
@@ -41,58 +41,60 @@ const FRMregistro =() => {
                 <div className="titulo1"><h1>Limpieza continua</h1></div>
                 <div className="titulo2"><h2>Bienvenido a la app de limpieza</h2></div>
                     <div className="botones-login">
-                        <div className="botongoogle">
-                            <button onClick={() => handleLogin('admin')}>
-                                <img src={googlefoto} height={20} width={20}></img>
-                                Ingresar como Administrador
-                            </button>
-                        </div>
-                        
-                        <div className="boton-usuario">
-                            <button onClick={() => handleLogin('usuario')} style={{
-                                padding: '12px 24px',
-                                backgroundColor: '#28a745',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '25px',
-                                cursor: 'pointer',
-                                fontSize: '0.9rem',
-                                fontWeight: '500',
-                                marginTop: '15px',
-                                width: '100%',
-                                transition: 'all 0.3s ease'
+                        {/* Sección principal de login */}
+                        <div className="login-principal">
+                            <h3 style={{color: '#333', fontSize: '1.1rem', marginBottom: '15px', textAlign: 'center'}}>
+                                Iniciar Sesión
+                            </h3>
+                            
+                            <GoogleLogin />
+                            
+                            <div className="separador" style={{
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                margin: '20px 0',
+                                color: '#666'
                             }}>
-                                Ingresar como Usuario
-                            </button>
-                        </div>
-                        
-                        <div style={{marginTop: '20px', textAlign: 'center'}}>
-                            <p style={{color: '#666', fontSize: '0.8rem', margin: '10px 0'}}>Acceso directo (Demo):</p>
-                            <div style={{display: 'flex', gap: '10px', justifyContent: 'center'}}>
-                                <button onClick={() => navigate('/admin')} style={{
-                                    padding: '8px 16px',
-                                    backgroundColor: '#6c757d',
+                                <hr style={{flex: 1, border: 'none', borderTop: '1px solid #ddd'}} />
+                                <span style={{padding: '0 15px', fontSize: '0.8rem'}}>o</span>
+                                <hr style={{flex: 1, border: 'none', borderTop: '1px solid #ddd'}} />
+                            </div>
+                            
+                            <div className="boton-usuario">
+                                <button onClick={() => handleLogin('usuario')} style={{
+                                    padding: '12px 24px',
+                                    backgroundColor: '#28a745',
                                     color: 'white',
                                     border: 'none',
-                                    borderRadius: '15px',
+                                    borderRadius: '25px',
                                     cursor: 'pointer',
-                                    fontSize: '0.8rem'
+                                    fontSize: '0.9rem',
+                                    fontWeight: '500',
+                                    width: '100%',
+                                    transition: 'all 0.3s ease'
                                 }}>
-                                    Admin
+                                    Ingresar como Usuario (Demo)
                                 </button>
-                                <button onClick={() => navigate('/usuario')} style={{
-                                    padding: '8px 16px',
-                                    backgroundColor: '#6c757d',
+                            </div>
+                            
+                            <div className="boton-admin" style={{marginTop: '10px'}}>
+                                <button onClick={() => handleLogin('admin')} style={{
+                                    padding: '12px 24px',
+                                    backgroundColor: '#dc3545',
                                     color: 'white',
                                     border: 'none',
-                                    borderRadius: '15px',
+                                    borderRadius: '25px',
                                     cursor: 'pointer',
-                                    fontSize: '0.8rem'
+                                    fontSize: '0.9rem',
+                                    fontWeight: '500',
+                                    width: '100%',
+                                    transition: 'all 0.3s ease'
                                 }}>
-                                    Usuario
+                                    Ingresar como Administrador (Demo)
                                 </button>
                             </div>
                         </div>
+                        
                     </div>
 
             </div>
