@@ -1,13 +1,10 @@
 import React from "react";
-import { useNavigate, Route , Router } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import "./estilos/FRM.css";
 import epetfoto from '../imagenes/epetfoto.jpg';
-import GoogleLogin from './GoogleLogin';
-//aca se importan los datos que necesita el fotmulario
+import googlefoto from '../imagenes/googleFoto.jpg';
 
-const FRMregistro = () => {
-    const navigate = useNavigate();
-
+const FRMRegistre = () => {
   const handleLogin = (tipoUsuario) => {
     // Simular login exitoso
     localStorage.setItem('auth.token', 'demo-token');
@@ -20,7 +17,6 @@ const FRMregistro = () => {
         email: 'admin@limpieza.com',
         rol: 'Admin'
       }));
-      navigate('/admin');
     } else {
       localStorage.setItem('auth.user', JSON.stringify({
         id: 2,
@@ -29,7 +25,6 @@ const FRMregistro = () => {
         email: 'usuario@limpieza.com',
         rol: 'Usuario'
       }));
-      navigate('/usuario');
     }
   };
 
@@ -53,19 +48,23 @@ const FRMregistro = () => {
       {/* Botones de login */}
       <div className="botones-login">
         <div className="boton-admin">
-          <button onClick={() => handleLogin('admin')}>
-            <img src={googlefoto} height={20} width={20} alt="icon" />
-            Ingresar como Administrador
-          </button>
+          <Link to="/admin">
+            <button onClick={() => handleLogin('admin')}>
+              <img src={googlefoto} height={20} width={20} alt="icon" />
+              Ingresar como Administrador
+            </button>
+          </Link>
         </div>
 
         <div className="boton-usuario">
-          <button
-            onClick={() => handleLogin('usuario')}
-            className="btn-usuario"
-          >
-            Ingresar como Usuario
-          </button>
+          <Link to="/usuario">
+            <button
+              onClick={() => handleLogin('usuario')}
+              className="btn-usuario"
+            >
+              Ingresar como Usuario
+            </button>
+          </Link>
         </div>
       </div>
 
@@ -73,12 +72,16 @@ const FRMregistro = () => {
       <div style={{ marginTop: '20px', textAlign: 'center' }}>
         <p style={{ color: '#666', fontSize: '0.8rem', margin: '10px 0' }}>Acceso directo (Demo):</p>
         <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
-          <button onClick={() => navigate('/admin')} className="btn-demo">Admin</button>
-          <button onClick={() => navigate('/usuario')} className="btn-demo">Usuario</button>
+          <Link to="/admin" className="btn-demo">
+            <button>Admin</button>
+          </Link>
+          <Link to="/usuario" className="btn-demo">
+            <button>Usuario</button>
+          </Link>
         </div>
       </div>
     </div>
   );
 };
 
-export default FRMregistro;
+export default FRMRegistre;
