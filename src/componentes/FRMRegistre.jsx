@@ -1,13 +1,15 @@
 import React from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Route , Router } from 'react-router-dom';
 import "./estilos/FRM.css";
 import epetfoto from '../imagenes/epetfoto.jpg';
-import googlefoto from '../imagenes/googleFoto.jpg';
+import GoogleLogin from './GoogleLogin';
+//aca se importan los datos que necesita el fotmulario
 
 const FRMregistro = () => {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
 
   const handleLogin = (tipoUsuario) => {
+    // Simular login exitoso
     localStorage.setItem('auth.token', 'demo-token');
 
     if (tipoUsuario === 'admin') {
@@ -34,11 +36,13 @@ const FRMregistro = () => {
   return (
     <div className="container-FRM">
       <div className="fotoEpet">
-        <img src={epetfoto} alt="imagen de epet20" height="168" width="300" />
+        <img src={epetfoto} alt="imagen de epet20" height="168" width="300" title="epet20" />
       </div>
-      <h1>Limpieza continua</h1>
-      <h2>Bienvenido a la app de limpieza</h2>
 
+      <div className="titulo1"><h1>Limpieza continua</h1></div>
+      <div className="titulo2"><h2>Bienvenido a la app de limpieza</h2></div>
+
+      {/* Botón Google */}
       <div className="botongoogle">
         <button onClick={() => alert('¡FireBase en proceso!')}>
           <img src={googlefoto} height={20} width={20} alt="Google" />
@@ -46,18 +50,32 @@ const FRMregistro = () => {
         </button>
       </div>
 
+      {/* Botones de login */}
       <div className="botones-login">
-        <button onClick={() => handleLogin('admin')}>
-          Ingresar como Administrador
-        </button>
-        <button onClick={() => handleLogin('usuario')}>
-          Ingresar como Usuario
-        </button>
+        <div className="boton-admin">
+          <button onClick={() => handleLogin('admin')}>
+            <img src={googlefoto} height={20} width={20} alt="icon" />
+            Ingresar como Administrador
+          </button>
+        </div>
+
+        <div className="boton-usuario">
+          <button
+            onClick={() => handleLogin('usuario')}
+            className="btn-usuario"
+          >
+            Ingresar como Usuario
+          </button>
+        </div>
       </div>
 
+      {/* Acceso directo demo */}
       <div style={{ marginTop: '20px', textAlign: 'center' }}>
-        <p>Acceso directo (Demo):</p>
-        <Link to="/admin">Ir a Admin</Link> | <Link to="/usuario">Ir a Usuario</Link>
+        <p style={{ color: '#666', fontSize: '0.8rem', margin: '10px 0' }}>Acceso directo (Demo):</p>
+        <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+          <button onClick={() => navigate('/admin')} className="btn-demo">Admin</button>
+          <button onClick={() => navigate('/usuario')} className="btn-demo">Usuario</button>
+        </div>
       </div>
     </div>
   );

@@ -5,28 +5,26 @@ import VistaAdmin from './views/admin/VistaAdmin';
 import VistaUsuario from './views/usuario/VistaUsuario';
 import Configuracion from './pages/Configuracion';
 import './App.css';
-// import { Routes, Route } from 'react-router-dom';
-// import EncargadoLimpieza from './componentes/encargado_limpieza';
-// import FRMregistro from './componentes/FRMRegistre';
-// import ReportesProblemas from './componentes/ReportesProblemas';
-// import Configuracion from './componentes/Configuracion';
-// import Navbar from './componentes/navbar'; // Si tienes un Navbar
-
+import EncargadoLimpieza from './componentes/encargado_limpieza';
+import ReportesProblemas from './componentes/ReportesProblemas';
+import Configuracion from './componentes/Configuracion';
+import Tareas from './componentes/tareas';
 
 function App() {
   return (
     <div className="App">
-        {/*<FRMregistro/>
+        <FRMregistro/>
         {/* <EncargadoLimpieza/>
         <ReportesProblemas/>
         <Configuracion/>
         <FRMregistro/> */}
       {/* <Navbar /> */}
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<FRMregistro />} />
-      </Routes>
-    </BrowserRouter>
+      {/* <Routes>
+        <Route path="/" element={<EncargadoLimpieza />} />
+        <Route path="/reportes" element={<ReportesProblemas />} />
+        <Route path="/configuracion" element={<Configuracion />} />
+        <Route path="/registro" element={<FRMregistro />} />
+      </Routes> */}
     </div>
   );
 }
