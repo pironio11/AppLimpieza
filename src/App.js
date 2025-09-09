@@ -1,8 +1,9 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import FRMregistro from '../src/pages/FRMregistro';
 import VistaAdmin from './views/admin/VistaAdmin';
 import VistaUsuario from './views/usuario/VistaUsuario';
+import Configuracion from './pages/Configuracion';
 import './App.css';
 // import { Routes, Route } from 'react-router-dom';
 // import EncargadoLimpieza from './componentes/encargado_limpieza';
@@ -15,18 +16,17 @@ import './App.css';
 function App() {
   return (
     <div className="App">
-        <FRMregistro/>
+        {/*<FRMregistro/>
         {/* <EncargadoLimpieza/>
         <ReportesProblemas/>
         <Configuracion/>
         <FRMregistro/> */}
       {/* <Navbar /> */}
-      {/* <Routes>
-        <Route path="/" element={<EncargadoLimpieza />} />
-        <Route path="/reportes" element={<ReportesProblemas />} />
-        <Route path="/configuracion" element={<Configuracion />} />
-        <Route path="/registro" element={<FRMregistro />} />
-      </Routes> */}
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<FRMregistro />} />
+      </Routes>
+    </BrowserRouter>
     </div>
   );
 }
