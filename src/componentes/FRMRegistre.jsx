@@ -39,18 +39,20 @@ const FRMRegistre = () => {
 
       {/* Botón Google */}
       <div className="botongoogle">
-        <button onClick={() => alert('¡FireBase en proceso!')}>
+        <button className="btn-primary btn-full" onClick={() => alert('¡FireBase en proceso!')}>
           <img src={googlefoto} height={20} width={20} alt="Google" />
           Inicia sesión con Google
         </button>
       </div>
 
+      {/* Divisor minimalista */}
+      <div className="divider"><span>o continúa como</span></div>
+
       {/* Botones de login */}
       <div className="botones-login">
         <div className="boton-admin">
           <Link to="/admin">
-            <button onClick={() => handleLogin('admin')}>
-              <img src={googlefoto} height={20} width={20} alt="icon" />
+            <button className="btn-outline btn-full" onClick={() => handleLogin('admin')}>
               Ingresar como Administrador
             </button>
           </Link>
@@ -60,23 +62,10 @@ const FRMRegistre = () => {
           <Link to="/usuario">
             <button
               onClick={() => handleLogin('usuario')}
-              className="btn-usuario"
+              className="btn-usuario btn-full btn-outline"
             >
               Ingresar como Usuario
             </button>
-          </Link>
-        </div>
-      </div>
-
-      {/* Acceso directo demo */}
-      <div style={{ marginTop: '20px', textAlign: 'center' }}>
-        <p style={{ color: '#666', fontSize: '0.8rem', margin: '10px 0' }}>Acceso directo (Demo):</p>
-        <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
-          <Link to="/admin" className="btn-demo">
-            <button>Admin</button>
-          </Link>
-          <Link to="/usuario" className="btn-demo">
-            <button>Usuario</button>
           </Link>
         </div>
       </div>

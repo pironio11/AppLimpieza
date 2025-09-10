@@ -1,37 +1,190 @@
 
 
-body{
-    /* margin: 15px; */
-    background-color: lightgray;
+/* Paleta y variables base */
+:root {
+  --bg: #f5f7fb;
+  --card-bg: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --primary: #2563eb;
+  --primary-600: #1d4ed8;
+  --ring: rgba(37, 99, 235, 0.35);
+  --border: #e5e7eb;
 }
 
-.container-FRM{
-    text-align: center;
-    margin: auto ;
-    background-color: rgb(255, 255, 255);
-    margin-top: 15px;
-    width: 50%;
-    border-radius: 5%;
-    margin-top: 5%;
+/* Fondo suave con degradado sutil */
+body {
+  background: linear-gradient(135deg, #eef2ff 0%, #f8fafc 100%);
+  min-height: 100vh;
 }
 
-button{
-    background: rgb(255, 255, 255);
-    margin-top: 5%;
-    margin-bottom: 5%;
-    border-radius: 8%;
-    height: 50px;
-    width: 30%;
-    border-width: 2px;
+/* Contenedor principal tipo card */
+.container-FRM {
+  box-sizing: border-box;
+  text-align: center;
+  margin: 5vh auto;
+  background-color: var(--card-bg);
+  width: min(920px, 92%);
+  border-radius: 16px;
+  padding: clamp(20px, 4vw, 36px);
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.08);
+  border: 1px solid var(--border);
 }
 
-.fotoEpet img{
-    height: 100px;
-    width: 100px;
-    border-radius: 50%;
+/* Encabezados */
+.titulo1 h1 {
+  margin: 8px 0 4px;
+  color: var(--text);
+  font-size: clamp(24px, 3.2vw, 34px);
+  font-weight: 700;
+  letter-spacing: 0.2px;
 }
-.fotoEpet{
-    border-width: 15px;
-    border-color: black;
-    padding: 20px;
+
+.titulo2 h2 {
+  margin: 0 0 20px;
+  color: var(--muted);
+  font-size: clamp(14px, 2.2vw, 18px);
+  font-weight: 500;
+}
+
+/* Foto/branding */
+.fotoEpet {
+  padding: 10px 0 2px;
+}
+
+.fotoEpet img {
+  height: 96px;
+  width: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* Sistema de botones */
+button {
+  appearance: none;
+  cursor: pointer;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 46px;
+  padding: 0 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--text);
+  font-weight: 600;
+  transition: transform 0.06s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 1px 3px rgba(16, 24, 40, 0.08);
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(2, 6, 23, 0.08);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(2, 6, 23, 0.06);
+}
+
+button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px var(--ring);
+}
+
+/* Variantes */
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+  border-color: transparent;
+}
+
+.btn-primary:hover {
+  background: var(--primary-600);
+}
+
+.btn-outline {
+  background: #fff;
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.btn-ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--muted);
+}
+
+.btn-full {
+  width: min(420px, 100%);
+}
+
+/* Botón Google estilizado */
+.botongoogle button {
+  width: min(420px, 100%);
+  background:#fff;
+}
+
+.botongoogle img {
+  border-radius: 4px;
+}
+
+/* Divisor minimalista */
+.divider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 18px auto;
+  width: min(420px, 100%);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1 1 0%;
+  height: 1px;
+  background: var(--border);
+}
+
+.divider span {
+  padding: 0 10px;
+}
+
+/* Grupo de botones */
+.botones-login {
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+  margin-top: 8px;
+}
+
+.boton-admin button,
+.boton-usuario button,
+.btn-demo button {
+  width: min(420px, 100%);
+}
+
+/* Demo acceso rápido */
+.btn-demo button {
+  height: 40px;
+}
+
+/* Responsivo */
+@media (min-width: 640px) {
+  .container-FRM {
+    padding: 40px 48px;
+  }
+}
+
+@media (max-width: 360px) {
+  button {
+    height: 44px;
+    padding: 0 12px;
+  }
 }
