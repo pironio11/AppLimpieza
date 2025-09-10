@@ -172,15 +172,15 @@
 }
 
 .reporte-card.pendiente {
-  border-left-color: #e74c3c;
+  border-left-color: var(--error);
 }
 
 .reporte-card.en-proceso {
-  border-left-color: #f39c12;
+  border-left-color: var(--warning);
 }
 
 .reporte-card.resuelto {
-  border-left-color: #27ae60;
+  border-left-color: var(--success);
 }
 
 .reporte-header {
@@ -208,18 +208,48 @@
 }
 
 .estado-badge.pendiente {
+  background-color: var(--error);
+  color: white;
+}
+
+.light-theme .estado-badge.pendiente {
   background-color: #fee;
   color: #e74c3c;
 }
 
+.dark-theme .estado-badge.pendiente {
+  background-color: #dc2626;
+  color: #fecaca;
+}
+
 .estado-badge.en-proceso {
+  background-color: var(--warning);
+  color: white;
+}
+
+.light-theme .estado-badge.en-proceso {
   background-color: #fef9e7;
   color: #f39c12;
 }
 
+.dark-theme .estado-badge.en-proceso {
+  background-color: #d97706;
+  color: #fed7aa;
+}
+
 .estado-badge.resuelto {
+  background-color: var(--success);
+  color: white;
+}
+
+.light-theme .estado-badge.resuelto {
   background-color: #eafaf1;
   color: #27ae60;
+}
+
+.dark-theme .estado-badge.resuelto {
+  background-color: #16a34a;
+  color: #bbf7d0;
 }
 
 .problema {
@@ -288,11 +318,11 @@
 /* Link de cerrar sesión */
 .link-inicio {
   display: inline-block;
-  color: #e74c3c;
+  color: var(--error);
   text-decoration: none;
   font-weight: 600;
   padding: 12px 25px;
-  border: 2px solid #e74c3c;
+  border: 2px solid var(--error);
   border-radius: 25px;
   transition: all 0.3s ease;
   margin-top: 30px;
@@ -300,10 +330,10 @@
 }
 
 .link-inicio:hover {
-  background-color: #e74c3c;
+  background-color: var(--error);
   color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+  box-shadow: 0 4px 15px var(--card-shadow);
 }
 
 /* Responsive design */
