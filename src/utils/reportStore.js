@@ -70,10 +70,25 @@ export function clearAllReports() {
   } catch {}
 }
 
+export function updateReport(id, patchOrUpdater) {
+  const list = loadReports();
+  const idx = list.findIndex(r => r && String(r.id) === String(id));
+  if (idx === -1) return null;
+  const prev = list[idx];
+  const patch = (typeof patchOrUpdater === 'function') ? patchOrUpdater(prev) : patchOrUpdater;
+  const updated = { ...prev, ...patch };
+  const next = [...list];
+  next[idx] = updated;
+  saveReports(next);
+  console.debug('[reportStore] update id=', id, 'patch=', patch);
+  return updated;
+}
+
 export const reportStore = {
   loadReports,
   saveReports,
   addReport,
+  updateReport,
   pruneOldReports,
   clearAllReports,
 };

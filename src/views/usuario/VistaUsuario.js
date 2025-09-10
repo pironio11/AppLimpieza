@@ -82,6 +82,22 @@ function Vista_Usuario() {
     setNewReporte({ ...newReporte, [e.target.name]: e.target.value });
   };
 
+  // Ciclar estado al clickear una tarjeta
+  const cycleEstado = (estado) => {
+    const order = ['Pendiente', 'En proceso', 'Completado'];
+    const idx = order.findIndex((s) => s.toLowerCase() === String(estado || '').toLowerCase());
+    const nextIdx = (idx === -1) ? 0 : (idx + 1) % order.length;
+    return order[nextIdx];
+  };
+
+  const handleToggleEstado = (reporte) => {
+    const nextEstado = cycleEstado(reporte.estado);
+    const updated = reportStore.updateReport(reporte.id, { estado: nextEstado });
+    if (updated) {
+      setReportes((prev) => prev.map((r) => r.id === reporte.id ? { ...r, estado: nextEstado } : r));
+    }
+  };
+
   return (
     <div className="vista-usuario">
       <Usuario />
@@ -166,7 +182,13 @@ function Vista_Usuario() {
         ) : (
           <div className="reportes-grid">
             {reportes.map((reporte) => (
-              <div key={reporte.id} className={`reporte-card ${reporte.estado.toLowerCase().replace(' ', '-')}`}>
+              <div
+                key={reporte.id}
+                className={`reporte-card ${reporte.estado.toLowerCase().replace(' ', '-')}`}
+                onClick={() => handleToggleEstado(reporte)}
+                title="Click para cambiar estado"
+                style={{ cursor: 'pointer' }}
+              >
                 <div className="reporte-header">
                   <h4>{reporte.area}</h4>
                   <span className={`estado-badge ${reporte.estado.toLowerCase().replace(' ', '-')}`}>
