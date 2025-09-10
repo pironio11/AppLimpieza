@@ -214,6 +214,8 @@ button:focus-visible {
 
 /* Divisor minimalista */
 .divider {
+  border: 5px solid var(--border);
+  color: black;
   position: relative;
   display: flex;
   align-items: center;
@@ -222,6 +224,8 @@ button:focus-visible {
   width: min(420px, 100%);
   color: var(--muted);
   font-size: 0.9rem;
+  border-color: var(--border);  
+  
 }
 
 .divider::before,

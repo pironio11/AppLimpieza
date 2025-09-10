@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import FRMregistro from "./componentes/FRMRegistre";
 // ...otros imports...
 import VistaUsuario from "./vistaUsuario";
+import ChatBot from "./components/ChatBot/ChatBot";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/usuario" element={<VistaUsuario />} />
         {/* Otras rutas */}
       </Routes>
+      <ChatBot />
     </BrowserRouter>
   );
 }
