@@ -1,10 +1,14 @@
 import React from "react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import "./estilos/FRM.css";
 import epetfoto from '../imagenes/epetfoto.jpg';
 import googlefoto from '../imagenes/googleFoto.jpg';
+import { auth, googleProvider } from '../firebase/config';
+import { signInWithPopup } from 'firebase/auth';
 
 const FRMRegistre = () => {
+  const navigate = useNavigate();
+
   const handleLogin = (tipoUsuario) => {
     // Simular login exitoso
     localStorage.setItem('auth.token', 'demo-token');
@@ -28,6 +32,28 @@ const FRMRegistre = () => {
     }
   };
 
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      // Guardar token y usuario básico
+      const token = (await user.getIdToken?.()) || 'google-token';
+      localStorage.setItem('auth.token', token);
+      localStorage.setItem('auth.user', JSON.stringify({
+        uid: user.uid,
+        nombre: user.displayName,
+        email: user.email,
+        foto: user.photoURL,
+        rol: 'Usuario'
+      }));
+      // Redirigir a usuario por defecto
+      navigate('/usuario');
+    } catch (error) {
+      console.error('Error en login con Google:', error);
+      alert('No se pudo iniciar sesión con Google. Revisa la configuración de Firebase.');
+    }
+  };
+
   return (
     <div className="container-FRM">
       <div className="fotoEpet">
@@ -39,9 +65,9 @@ const FRMRegistre = () => {
 
       {/* Botón Google */}
       <div className="botongoogle">
-        <button className="btn-primary btn-full" onClick={() => alert('¡FireBase en proceso!')}>
+        <button className="btn-primary btn-full" onClick={handleGoogleLogin}>
           <img src={googlefoto} height={20} width={20} alt="Google" />
-          Inicia sesión con Google
+          Continuar con Google
         </button>
       </div>
 
