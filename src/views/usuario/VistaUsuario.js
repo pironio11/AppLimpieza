@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Usuario from '../../componentes/usuario';
 import './VistaUsuario.css';
+import { reportStore } from '../../utils/reportStore';
 
 // INICIO SESIÓN 
 function getSession() {
@@ -15,24 +16,12 @@ function getSession() {
   }
 }
 
-// API para reportes
-const reportesService = {
-  async list({ token }) {
-    if (!token) throw new Error('SIN_TOKEN');
-    // Simulamos datos de reportes para demo
-    return [
-      { id: 1, area: 'Baño Principal', problema: 'Falta papel higiénico', estado: 'Pendiente', fecha: '2024-01-15' },
-      { id: 2, area: 'Aula 101', problema: 'Pizarrón sucio', estado: 'En proceso', fecha: '2024-01-14' },
-      { id: 3, area: 'Cafetería', problema: 'Mesa rota', estado: 'Resuelto', fecha: '2024-01-13' }
-    ];
-  },
-  async create({ token, data }) {
-    if (!token) throw new Error('SIN_TOKEN');
-    // Simular creación de reporte
-    console.log('Nuevo reporte:', data);
-    return { id: Date.now(), ...data, estado: 'Pendiente', fecha: new Date().toISOString().split('T')[0] };
-  }
-};
+// Normalizador para mostrar fecha/estado aunque no vengan
+function normalizeReporte(r) {
+  const fecha = r.fecha || new Date(r.createdAt || Date.now()).toISOString().split('T')[0];
+  const estado = r.estado || 'Pendiente';
+  return { ...r, fecha, estado };
+}
 
 function Vista_Usuario() {
   const [reportes, setReportes] = useState([]);
@@ -46,12 +35,13 @@ function Vista_Usuario() {
   const { token, currentUser } = getSession();
 
   // Cargar reportes del usuario
-  const fetchReportes = async () => {
+  const fetchReportes = () => {
     setLoading(true);
     try {
-      const data = await reportesService.list({ token });
-      setReportes(data);
+      const data = reportStore.loadReports();
+      setReportes(data.map(normalizeReporte));
     } catch (err) {
+      console.warn('Error cargando reportes:', err);
       setReportes([]);
     } finally {
       setLoading(false);
@@ -63,17 +53,30 @@ function Vista_Usuario() {
   }, [token]);
 
   // Crear nuevo reporte
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     try {
-      const nuevoReporte = await reportesService.create({ token, data: newReporte });
-      setReportes([nuevoReporte, ...reportes]);
+      const payload = {
+        ...newReporte,
+        estado: 'Pendiente',
+        fecha: new Date().toISOString().split('T')[0],
+      };
+      const creado = reportStore.addReport(payload);
+      setReportes([normalizeReporte(creado), ...reportes]);
       setNewReporte({ area: '', problema: '', descripcion: '' });
       setShowForm(false);
     } catch (err) {
       alert('Error al crear reporte');
     }
   };
+
+  // Limpieza automática periódica (cada 1 hora)
+  useEffect(() => {
+    const id = setInterval(() => {
+      fetchReportes();
+    }, 60 * 60 * 1000);
+    return () => clearInterval(id);
+  }, []);
 
   const handleChange = (e) => {
     setNewReporte({ ...newReporte, [e.target.name]: e.target.value });
