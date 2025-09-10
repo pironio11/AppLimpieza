@@ -8,7 +8,6 @@ import { signInWithPopup } from 'firebase/auth';
 
 const FRMRegistre = () => {
   const navigate = useNavigate();
-
   const handleLogin = (tipoUsuario) => {
     // Simular login exitoso
     localStorage.setItem('auth.token', 'demo-token');
