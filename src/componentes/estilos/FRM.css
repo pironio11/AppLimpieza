@@ -31,6 +31,35 @@ body {
   border: 1px solid var(--border);
 }
 
+/* Layout de la tarjeta: mobile 1col, desktop 2col */
+.frm-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  align-items: center;
+}
+
+.frm-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.frm-aside {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .frm-layout {
+    grid-template-columns: 1.2fr 0.8fr;
+  }
+  .frm-aside {
+    display: block;
+    border-left: 1px dashed var(--border);
+    padding-left: 24px;
+  }
+}
+
 /* Encabezados */
 .titulo1 h1 {
   margin: 8px 0 4px;
@@ -58,6 +87,57 @@ body {
   border-radius: 50%;
   object-fit: cover;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.aside-card {
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.aside-cover {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 6px 16px rgba(2, 6, 23, 0.06);
+  margin-bottom: 12px;
+}
+
+.checklist {
+  text-align: left;
+  padding-left: 0;
+  margin: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.checklist li::before {
+  content: '✔';
+  color: var(--primary);
+  margin-right: 8px;
+}
+
+/* Header de marca */
+.brand-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.brand-title {
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  color: var(--text);
+}
+
+.brand-subtitle {
+  color: var(--muted);
+  font-weight: 500;
 }
 
 /* Sistema de botones */
@@ -173,6 +253,56 @@ button:focus-visible {
 /* Demo acceso rápido */
 .btn-demo button {
   height: 40px;
+}
+
+/* Lista de beneficios (pills) */
+.badge-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin: 10px auto 6px;
+  width: min(780px, 100%);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #f1f5ff;
+  color: #1e40af;
+  border: 1px solid #e0e7ff;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* Barra de estadísticas */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 14px auto 6px;
+  width: min(780px, 100%);
+}
+
+.stat {
+  background: #fafafa;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.stat-value {
+  font-size: clamp(18px, 2.8vw, 22px);
+  font-weight: 700;
+  color: var(--text);
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: var(--muted);
 }
 
 /* Responsivo */

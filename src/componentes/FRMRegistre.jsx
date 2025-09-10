@@ -56,44 +56,91 @@ const FRMRegistre = () => {
 
   return (
     <div className="container-FRM">
-      <div className="fotoEpet">
-        <img src={epetfoto} alt="imagen de epet20" height="168" width="300" title="epet20" />
-      </div>
+      <div className="frm-layout">
+        {/* Columna principal */}
+        <div className="frm-main">
+          <div className="fotoEpet">
+            <img src={epetfoto} alt="imagen de epet20" height="168" width="300" title="epet20" />
+          </div>
 
-      <div className="titulo1"><h1>Limpieza continua</h1></div>
-      <div className="titulo2"><h2>Bienvenido a la app de limpieza</h2></div>
+          {/* Encabezado de marca */}
+          <div className="brand-header">
+            <div>
+              <h1 className="brand-title" style={{ fontSize: 'clamp(24px, 3.2vw, 34px)', margin: 0 }}>Limpieza continua</h1>
+              <p className="brand-subtitle" style={{ fontSize: 'clamp(14px, 2.2vw, 18px)', margin: '6px 0 0' }}>Organizá tareas, reportá problemas y mantené todo bajo control.</p>
+            </div>
+          </div>
 
-      {/* Botón Google */}
-      <div className="botongoogle">
-        <button className="btn-primary btn-full" onClick={handleGoogleLogin}>
-          <img src={googlefoto} height={20} width={20} alt="Google" />
-          Continuar con Google
-        </button>
-      </div>
+          {/* Beneficios / features rápidos */}
+          <div className="badge-list">
+            <span className="badge">✓ Reportes en minutos</span>
+            <span className="badge">✓ Asignación de tareas</span>
+            <span className="badge">✓ Historial y seguimiento</span>
+            <span className="badge">✓ Notificaciones</span>
+          </div>
 
-      {/* Divisor minimalista */}
-      <div className="divider"><span>o continúa como</span></div>
-
-      {/* Botones de login */}
-      <div className="botones-login">
-        <div className="boton-admin">
-          <Link to="/admin">
-            <button className="btn-outline btn-full" onClick={() => handleLogin('admin')}>
-              Ingresar como Administrador
+          {/* Botón Google */}
+          <div className="botongoogle">
+            <button className="btn-primary btn-full" onClick={handleGoogleLogin}>
+              <img src={googlefoto} height={20} width={20} alt="Google" />
+              Continuar con Google
             </button>
-          </Link>
+          </div>
+
+          {/* Divisor minimalista */}
+          <div className="divider"><span>o continúa como</span></div>
+
+          {/* Botones de login */}
+          <div className="botones-login">
+            <div className="boton-admin">
+              <Link to="/admin">
+                <button className="btn-outline btn-full" onClick={() => handleLogin('admin')}>
+                  Ingresar como Administrador
+                </button>
+              </Link>
+            </div>
+
+            <div className="boton-usuario">
+              <Link to="/usuario">
+                <button
+                  onClick={() => handleLogin('usuario')}
+                  className="btn-usuario btn-full btn-outline"
+                >
+                  Ingresar como Usuario
+                </button>
+              </Link>
+            </div>
+          </div>
+
+          {/* Barra de estadísticas */}
+          <div className="stats">
+            <div className="stat">
+              <div className="stat-value">+120</div>
+              <div className="stat-label">Tareas mensuales</div>
+            </div>
+            <div className="stat">
+              <div className="stat-value">98%</div>
+              <div className="stat-label">Cumplimiento</div>
+            </div>
+            <div className="stat">
+              <div className="stat-value">24/7</div>
+              <div className="stat-label">Disponibilidad</div>
+            </div>
+          </div>
         </div>
 
-        <div className="boton-usuario">
-          <Link to="/usuario">
-            <button
-              onClick={() => handleLogin('usuario')}
-              className="btn-usuario btn-full btn-outline"
-            >
-              Ingresar como Usuario
-            </button>
-          </Link>
-        </div>
+        {/* Columna lateral */}
+        <aside className="frm-aside">
+          <div className="aside-card">
+            <img className="aside-cover" src={epetfoto} alt="Cobertura" />
+            <ul className="checklist">
+              <li>Panel para Administradores</li>
+              <li>Panel para Usuarios</li>
+              <li>Reportes de problemas con fotos</li>
+              <li>Estadísticas en tiempo real</li>
+            </ul>
+          </div>
+        </aside>
       </div>
     </div>
   );
