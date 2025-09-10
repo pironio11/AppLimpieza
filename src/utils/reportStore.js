@@ -1,14 +1,35 @@
 // Utilidades para persistir reportes en localStorage con expiración a 7 días
 // Estructura de reporte sugerida: { id: string, createdAt: number (ms), ...payload }
 export const STORAGE_KEY = 'app.reportes.v1';
-const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+const TTL_KEY = 'app.reportes.ttl_ms';
+const DEFAULT_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 días
+
+export function getTTLms() {
+  try {
+    const fromLS = localStorage.getItem(TTL_KEY);
+    if (fromLS && !Number.isNaN(Number(fromLS))) return Number(fromLS);
+  } catch {}
+  const fromEnv = Number(process.env.REACT_APP_REPORT_TTL_MS);
+  if (!Number.isNaN(fromEnv) && fromEnv > 0) return fromEnv;
+  return DEFAULT_TTL_MS;
+}
+
+export function setTTLms(ms) {
+  try {
+    if (typeof ms === 'number' && ms > 0) {
+      localStorage.setItem(TTL_KEY, String(ms));
+    } else {
+      localStorage.removeItem(TTL_KEY);
+    }
+  } catch {}
+}
 
 export function now() {
   return Date.now();
 }
 
 export function pruneOldReports(list) {
-  const cutoff = now() - SEVEN_DAYS_MS;
+  const cutoff = now() - getTTLms();
   return (Array.isArray(list) ? list : []).filter(r =>
     r && typeof r.createdAt === 'number' && r.createdAt >= cutoff
   );

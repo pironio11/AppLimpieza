@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Usuario from '../../componentes/usuario';
 import './VistaUsuario.css';
-import { reportStore } from '../../utils/reportStore';
+import { reportStore, getTTLms } from '../../utils/reportStore';
 
 // INICIO SESIÓN 
 function getSession() {
@@ -32,6 +32,7 @@ function Vista_Usuario() {
     problema: '',
     descripcion: ''
   });
+  const [nowMs, setNowMs] = useState(Date.now());
   const { token, currentUser } = getSession();
 
   // Cargar reportes del usuario
@@ -70,11 +71,11 @@ function Vista_Usuario() {
     }
   };
 
-  // Limpieza automática periódica (cada 1 hora)
+  // Refresco automático según TTL (si TTL <= 60s, refrescar cada 2s; si no, cada 1h)
   useEffect(() => {
-    const id = setInterval(() => {
-      fetchReportes();
-    }, 60 * 60 * 1000);
+    const ttl = getTTLms();
+    const intervalMs = ttl <= 60 * 1000 ? 2000 : 60 * 60 * 1000;
+    const id = setInterval(fetchReportes, intervalMs);
     return () => clearInterval(id);
   }, []);
 
@@ -96,6 +97,31 @@ function Vista_Usuario() {
     if (updated) {
       setReportes((prev) => prev.map((r) => r.id === reporte.id ? { ...r, estado: nextEstado } : r));
     }
+  };
+
+  // Tick de 1s para actualizar visualmente los contadores de tiempo restante
+  useEffect(() => {
+    const timer = setInterval(() => setNowMs(Date.now()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const calcRemainingMs = (createdAt) => {
+    const ttl = getTTLms();
+    return (createdAt || Date.now()) + ttl - nowMs;
+  };
+
+  const formatRemaining = (ms) => {
+    if (ms <= 0) return '00:00';
+    const totalSeconds = Math.floor(ms / 1000);
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    if (days > 0) return `${days}d ${hours}h`;
+    if (hours > 0) return `${hours}h ${minutes}m`;
+    const mm = String(minutes).padStart(2, '0');
+    const ss = String(seconds).padStart(2, '0');
+    return `${mm}:${ss}`;
   };
 
   return (
@@ -201,6 +227,9 @@ function Vista_Usuario() {
                 )}
                 <div className="reporte-footer">
                   <span className="fecha">Reportado: {reporte.fecha}</span>
+                  <span className="ttl" style={{ marginLeft: 12, color: '#555', fontWeight: 600 }}>
+                    Se elimina en: {formatRemaining(calcRemainingMs(reporte.createdAt))}
+                  </span>
                 </div>
               </div>
             ))}
