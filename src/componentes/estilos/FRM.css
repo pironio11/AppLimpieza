@@ -268,6 +268,27 @@ button:focus-visible {
 .botongoogle button {
   width: min(420px, 100%);
   background: var(--button-bg);
+  color: var(--text);
+  border: 2px solid var(--border);
+  font-weight: 500;
+}
+
+.light-theme .botongoogle button {
+  background: #ffffff;
+  color: #374151;
+  border: 2px solid #d1d5db;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.dark-theme .botongoogle button {
+  background: var(--button-bg);
+  color: var(--text);
+  border: 2px solid var(--border);
+}
+
+.botongoogle button:hover {
+  border-color: var(--primary);
+  box-shadow: 0 4px 12px var(--button-shadow-hover);
 }
 
 .botongoogle img {
@@ -276,8 +297,6 @@ button:focus-visible {
 
 /* Divisor minimalista */
 .divider {
-  border: 5px solid var(--border);
-  color: black;
   position: relative;
   display: flex;
   align-items: center;
@@ -286,8 +305,6 @@ button:focus-visible {
   width: min(420px, 100%);
   color: var(--muted);
   font-size: 0.9rem;
-  border-color: var(--border);  
-  
 }
 
 .divider::before,
