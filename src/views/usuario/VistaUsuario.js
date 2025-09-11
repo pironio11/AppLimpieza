@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Usuario from '../../componentes/usuario';
 import './VistaUsuario.css';
+import { reportStore, getTTLms } from '../../utils/reportStore';
 
 // INICIO SESIÓN 
 function getSession() {
@@ -15,24 +16,12 @@ function getSession() {
   }
 }
 
-// API para reportes
-const reportesService = {
-  async list({ token }) {
-    if (!token) throw new Error('SIN_TOKEN');
-    // Simulamos datos de reportes para demo
-    return [
-      { id: 1, area: 'Baño Principal', problema: 'Falta papel higiénico', estado: 'Pendiente', fecha: '2024-01-15' },
-      { id: 2, area: 'Aula 101', problema: 'Pizarrón sucio', estado: 'En proceso', fecha: '2024-01-14' },
-      { id: 3, area: 'Cafetería', problema: 'Mesa rota', estado: 'Resuelto', fecha: '2024-01-13' }
-    ];
-  },
-  async create({ token, data }) {
-    if (!token) throw new Error('SIN_TOKEN');
-    // Simular creación de reporte
-    console.log('Nuevo reporte:', data);
-    return { id: Date.now(), ...data, estado: 'Pendiente', fecha: new Date().toISOString().split('T')[0] };
-  }
-};
+// Normalizador para mostrar fecha/estado aunque no vengan
+function normalizeReporte(r) {
+  const fecha = r.fecha || new Date(r.createdAt || Date.now()).toISOString().split('T')[0];
+  const estado = r.estado || 'Pendiente';
+  return { ...r, fecha, estado };
+}
 
 function Vista_Usuario() {
   const [reportes, setReportes] = useState([]);
@@ -43,15 +32,17 @@ function Vista_Usuario() {
     problema: '',
     descripcion: ''
   });
+  const [nowMs, setNowMs] = useState(Date.now());
   const { token, currentUser } = getSession();
 
   // Cargar reportes del usuario
-  const fetchReportes = async () => {
+  const fetchReportes = () => {
     setLoading(true);
     try {
-      const data = await reportesService.list({ token });
-      setReportes(data);
+      const data = reportStore.loadReports();
+      setReportes(data.map(normalizeReporte));
     } catch (err) {
+      console.warn('Error cargando reportes:', err);
       setReportes([]);
     } finally {
       setLoading(false);
@@ -63,11 +54,16 @@ function Vista_Usuario() {
   }, [token]);
 
   // Crear nuevo reporte
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     try {
-      const nuevoReporte = await reportesService.create({ token, data: newReporte });
-      setReportes([nuevoReporte, ...reportes]);
+      const payload = {
+        ...newReporte,
+        estado: 'Pendiente',
+        fecha: new Date().toISOString().split('T')[0],
+      };
+      const creado = reportStore.addReport(payload);
+      setReportes([normalizeReporte(creado), ...reportes]);
       setNewReporte({ area: '', problema: '', descripcion: '' });
       setShowForm(false);
     } catch (err) {
@@ -75,8 +71,57 @@ function Vista_Usuario() {
     }
   };
 
+  // Refresco automático según TTL (si TTL <= 60s, refrescar cada 2s; si no, cada 1h)
+  useEffect(() => {
+    const ttl = getTTLms();
+    const intervalMs = ttl <= 60 * 1000 ? 2000 : 60 * 60 * 1000;
+    const id = setInterval(fetchReportes, intervalMs);
+    return () => clearInterval(id);
+  }, []);
+
   const handleChange = (e) => {
     setNewReporte({ ...newReporte, [e.target.name]: e.target.value });
+  };
+
+  // Ciclar estado al clickear una tarjeta
+  const cycleEstado = (estado) => {
+    const order = ['Pendiente', 'En proceso', 'Completado'];
+    const idx = order.findIndex((s) => s.toLowerCase() === String(estado || '').toLowerCase());
+    const nextIdx = (idx === -1) ? 0 : (idx + 1) % order.length;
+    return order[nextIdx];
+  };
+
+  const handleToggleEstado = (reporte) => {
+    const nextEstado = cycleEstado(reporte.estado);
+    const updated = reportStore.updateReport(reporte.id, { estado: nextEstado });
+    if (updated) {
+      setReportes((prev) => prev.map((r) => r.id === reporte.id ? { ...r, estado: nextEstado } : r));
+    }
+  };
+
+  // Tick de 1s para actualizar visualmente los contadores de tiempo restante
+  useEffect(() => {
+    const timer = setInterval(() => setNowMs(Date.now()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const calcRemainingMs = (createdAt) => {
+    const ttl = getTTLms();
+    return (createdAt || Date.now()) + ttl - nowMs;
+  };
+
+  const formatRemaining = (ms) => {
+    if (ms <= 0) return '00:00';
+    const totalSeconds = Math.floor(ms / 1000);
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    if (days > 0) return `${days}d ${hours}h`;
+    if (hours > 0) return `${hours}h ${minutes}m`;
+    const mm = String(minutes).padStart(2, '0');
+    const ss = String(seconds).padStart(2, '0');
+    return `${mm}:${ss}`;
   };
 
   return (
@@ -163,7 +208,13 @@ function Vista_Usuario() {
         ) : (
           <div className="reportes-grid">
             {reportes.map((reporte) => (
-              <div key={reporte.id} className={`reporte-card ${reporte.estado.toLowerCase().replace(' ', '-')}`}>
+              <div
+                key={reporte.id}
+                className={`reporte-card ${reporte.estado.toLowerCase().replace(' ', '-')}`}
+                onClick={() => handleToggleEstado(reporte)}
+                title="Click para cambiar estado"
+                style={{ cursor: 'pointer' }}
+              >
                 <div className="reporte-header">
                   <h4>{reporte.area}</h4>
                   <span className={`estado-badge ${reporte.estado.toLowerCase().replace(' ', '-')}`}>
@@ -176,6 +227,9 @@ function Vista_Usuario() {
                 )}
                 <div className="reporte-footer">
                   <span className="fecha">Reportado: {reporte.fecha}</span>
+                  <span className="ttl" style={{ marginLeft: 12, color: '#555', fontWeight: 600 }}>
+                    Se elimina en: {formatRemaining(calcRemainingMs(reporte.createdAt))}
+                  </span>
                 </div>
               </div>
             ))}
