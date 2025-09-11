@@ -33,21 +33,34 @@ const FRMRegistre = () => {
 
   const handleGoogleLogin = async () => {
     try {
+      console.log('Iniciando autenticación con Google...');
       const result = await signInWithPopup(auth, googleProvider);
+      console.log('Resultado de autenticación:', result);
+      
       const user = result.user;
-      // Guardar token y usuario básico
-      const token = (await user.getIdToken?.()) || 'google-token';
+      console.log('Usuario autenticado:', user);
+      
+      // Obtener el token de autenticación
+      const token = await user.getIdToken();
+      console.log('Token de autenticación:', token);
+      
+      // Guardar token y usuario en localStorage
       localStorage.setItem('auth.token', token);
       localStorage.setItem('auth.user', JSON.stringify({
         uid: user.uid,
-        nombre: user.displayName,
+        nombre: user.displayName || 'Usuario',
         email: user.email,
         foto: user.photoURL,
         rol: 'Usuario'
       }));
-      // Redirigir a usuario por defecto
+      
+      console.log('Redirigiendo a /usuario...');
       navigate('/usuario');
     } catch (error) {
+      console.error('Error en autenticación con Google:', error);
+      console.error('Código de error:', error.code);
+      console.error('Mensaje de error:', error.message);
+      alert(`Error al iniciar sesión con Google: ${error.message}`);
       console.error('Error en login con Google:', error);
       alert('No se pudo iniciar sesión con Google. Revisa la configuración de Firebase.');
     }

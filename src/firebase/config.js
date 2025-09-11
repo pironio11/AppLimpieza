@@ -1,38 +1,44 @@
-// Import the functions you need from the SDKs you need
+// Importa las funciones necesarias de Firebase
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
-// Your web app's Firebase configuration
-// Configuración temporal para desarrollo - reemplaza con tus credenciales reales
+// Configuración de Firebase
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY || "AIzaSyDemo-Replace-With-Real-Key",
-  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN || "limpieza-app-demo.firebaseapp.com",
-  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID || "limpieza-app-demo",
-  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET || "limpieza-app-demo.appspot.com",
-  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID || "123456789",
-  appId: process.env.REACT_APP_FIREBASE_APP_ID || "1:123456789:web:demo123"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID
 };
 
 // Validar configuración
 const isValidConfig = firebaseConfig.apiKey && 
                      firebaseConfig.authDomain && 
-                     firebaseConfig.projectId &&
-                     !firebaseConfig.apiKey.includes('Demo');
+                     firebaseConfig.projectId;
+
+// Inicializa Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
+const googleProvider = new GoogleAuthProvider();
+
+// Verificar configuración en consola
+console.log('🔍 Configuración de Firebase cargada:');
+console.log('API Key:', firebaseConfig.apiKey ? '✅ Configurada' : '❌ Faltante');
+console.log('Auth Domain:', firebaseConfig.authDomain || '❌ Faltante');
+console.log('Project ID:', firebaseConfig.projectId || '❌ Faltante');
 
 if (!isValidConfig) {
-  console.warn('⚠️ Firebase no está configurado correctamente. Necesitas:');
-  console.warn('1. Crear proyecto en https://console.firebase.google.com/');
-  console.warn('2. Habilitar Authentication > Google');
-  console.warn('3. Copiar credenciales al archivo .env');
+  console.error('❌ Firebase no está configurado correctamente. Necesitas:');
+  console.error('1. Verificar que todas las variables en .env comiencen con REACT_APP_');
+  console.error('2. Reiniciar el servidor después de modificar .env');
+  console.error('3. Verificar que los dominios estén autorizados en Firebase Console');
+} else {
+  console.log('✅ Firebase está configurado correctamente');
 }
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-
-// Initialize Firebase Authentication and get a reference to the service
-export const auth = getAuth(app);
-
-// Initialize Google Auth Provider
-export const googleProvider = new GoogleAuthProvider();
-
-export default app;
+export { auth, db, storage, googleProvider, app as default };
