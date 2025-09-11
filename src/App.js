@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import FRMregistro from '../src/pages/FRMregistro';
 import VistaAdmin from './views/admin/VistaAdmin';
 import VistaUsuario from './views/usuario/VistaUsuario';
-import Configuracion from './pages/Configuracion';
 import './App.css';
 import EncargadoLimpieza from './componentes/encargado_limpieza';
 import ReportesProblemas from './componentes/ReportesProblemas';
