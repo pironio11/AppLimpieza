@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import "./estilos/FRM.css";
 import epetfoto from '../imagenes/epetfoto.jpg';
@@ -8,8 +8,12 @@ import { signInWithPopup } from 'firebase/auth';
 
 const FRMRegistre = () => {
   const navigate = useNavigate();
+  const [loginMode, setLoginMode] = useState(null);
+  const [legajo, setLegajo] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
   const handleLogin = (tipoUsuario) => {
-    // Simular login exitoso
     localStorage.setItem('auth.token', 'demo-token');
 
     if (tipoUsuario === 'admin') {
@@ -20,6 +24,7 @@ const FRMRegistre = () => {
         email: 'admin@limpieza.com',
         rol: 'Admin'
       }));
+      navigate('/admin');
     } else {
       localStorage.setItem('auth.user', JSON.stringify({
         id: 2,
@@ -28,6 +33,7 @@ const FRMRegistre = () => {
         email: 'usuario@limpieza.com',
         rol: 'Usuario'
       }));
+      navigate('/usuario');
     }
   };
 
@@ -102,26 +108,69 @@ const FRMRegistre = () => {
           {/* Divisor minimalista */}
           <div className="divider"><span>o continúa como</span></div>
 
-          {/* Botones de login */}
-          <div className="botones-login">
-            <div className="boton-admin">
-              <Link to="/admin">
-                <button className="btn-outline btn-full" onClick={() => handleLogin('admin')}>
-                  Ingresar como Administrador
-                </button>
-              </Link>
-            </div>
-
-            <div className="boton-usuario">
-              <Link to="/usuario">
-                <button
-                  onClick={() => handleLogin('usuario')}
-                  className="btn-usuario btn-full btn-outline"
-                >
-                  Ingresar como Usuario
-                </button>
-              </Link>
-            </div>
+          <div className="login-forms">
+            {loginMode === 'admin' ? (
+              <form onSubmit={(e) => { e.preventDefault(); handleLogin('admin'); }} className="login-form">
+                <h3 className="form-title">Ingreso Administrador</h3>
+                <div className="form-group">
+                  <label htmlFor="legajo">N° de Legajo</label>
+                  <input
+                    type="text"
+                    id="legajo"
+                    className="form-control"
+                    value={legajo}
+                    onChange={(e) => setLegajo(e.target.value)}
+                    required
+                  />
+                </div>
+                <button type="submit" className="btn-primary btn-full">Ingresar</button>
+                <button type="button" onClick={() => setLoginMode(null)} className="btn-outline btn-full btn-back">Volver</button>
+              </form>
+            ) : loginMode === 'user' ? (
+              <form onSubmit={(e) => { e.preventDefault(); handleLogin('usuario'); }} className="login-form">
+                <h3 className="form-title">Ingreso Usuario</h3>
+                <div className="form-group">
+                  <label htmlFor="email">Gmail</label>
+                  <input
+                    type="email"
+                    id="email"
+                    className="form-control"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="password">Contraseña</label>
+                  <input
+                    type="password"
+                    id="password"
+                    className="form-control"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </div>
+                <button type="submit" className="btn-primary btn-full">Ingresar</button>
+                <button type="button" onClick={() => setLoginMode(null)} className="btn-outline btn-full btn-back">Volver</button>
+              </form>
+            ) : (
+              <div className="botones-login">
+                <div className="boton-admin">
+                  <button className="btn-outline btn-full" onClick={() => setLoginMode('admin')}>
+                    Ingresar como Administrador
+                  </button>
+                </div>
+                <div className="boton-usuario">
+                  <button
+                    onClick={() => setLoginMode('user')}
+                    className="btn-usuario btn-full btn-outline"
+                  >
+                    Ingresar como Usuario
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Barra de estadísticas */}
