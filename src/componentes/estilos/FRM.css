@@ -404,7 +404,6 @@ button:focus-visible {
   }
 }
 
-/* Estilos para formularios de login */
 .login-forms {
   width: min(420px, 100%);
   margin-top: 8px;
@@ -453,7 +452,7 @@ button:focus-visible {
 }
 
 .btn-back {
-  margin-top: -4px; /* Reduce space slightly */
+  margin-top: -4px;
   background: transparent;
   border-color: transparent;
   color: var(--muted);

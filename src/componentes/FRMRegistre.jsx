@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import "./estilos/FRM.css";
+import logoepet from '../imagenes/logoepet.jpg';
 import epetfoto from '../imagenes/epetfoto.jpg';
 import googlefoto from '../imagenes/googleFoto.jpg';
 import { auth, googleProvider } from '../firebase/config';
@@ -75,13 +76,11 @@ const FRMRegistre = () => {
   return (
     <div className="container-FRM">
       <div className="frm-layout">
-        {/* Columna principal */}
         <div className="frm-main">
           <div className="fotoEpet">
-            <img src={epetfoto} alt="imagen de epet20" height="168" width="300" title="epet20" />
+            <img src={logoepet} alt="imagen de epet20" height="168" width="300" title="epet20" />
           </div>
 
-          {/* Encabezado de marca */}
           <div className="brand-header">
             <div>
               <h1 className="brand-title" style={{ fontSize: 'clamp(24px, 3.2vw, 34px)', margin: 0 }}>Limpieza continua</h1>
@@ -89,7 +88,6 @@ const FRMRegistre = () => {
             </div>
           </div>
 
-          {/* Beneficios / features rápidos */}
           <div className="badge-list">
             <span className="badge">✓ Reportes en minutos</span>
             <span className="badge">✓ Asignación de tareas</span>
@@ -97,7 +95,6 @@ const FRMRegistre = () => {
             <span className="badge">✓ Notificaciones</span>
           </div>
 
-          {/* Botón Google */}
           <div className="botongoogle">
             <button className="btn-primary btn-full" onClick={handleGoogleLogin}>
               <img src={googlefoto} height={20} width={20} alt="Google" />
@@ -105,7 +102,6 @@ const FRMRegistre = () => {
             </button>
           </div>
 
-          {/* Divisor minimalista */}
           <div className="divider"><span>o continúa como</span></div>
 
           <div className="login-forms">
@@ -173,7 +169,6 @@ const FRMRegistre = () => {
             )}
           </div>
 
-          {/* Barra de estadísticas */}
           <div className="stats">
             <div className="stat">
               <div className="stat-value">+120</div>
@@ -190,7 +185,6 @@ const FRMRegistre = () => {
           </div>
         </div>
 
-        {/* Columna lateral */}
         <aside className="frm-aside">
           <div className="aside-card">
             <img className="aside-cover" src={epetfoto} alt="Cobertura" />
