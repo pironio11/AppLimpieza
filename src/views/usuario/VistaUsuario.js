@@ -35,13 +35,8 @@ function Vista_Usuario() {
   const [nowMs, setNowMs] = useState(Date.now());
   const { token, currentUser } = getSession();
 
-<<<<<<< HEAD
   // Cargar reportes del usuario (memorizado para satisfacer reglas de hooks)
   const fetchReportes = useCallback(async () => {
-=======
-  // Cargar reportes del usuario
-  const fetchReportes = () => {
->>>>>>> c049734b8fe1fe312a9e26da208b474e93089c75
     setLoading(true);
     try {
       const data = reportStore.loadReports();

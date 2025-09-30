@@ -11,26 +11,15 @@ import Tareas from './componentes/tareas';
 
 function App() {
   return (
-    <div className="App">
-        <FRMRegistre/>
-        {/* <EncargadoLimpieza/>
-        <ReportesProblemas/>
-        <Configuracion/>
-        <Tareas/> */}
-        <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<FRMRegistre />} />
+          <Route path="/admin" element={<VistaAdmin />} />
+          <Route path="/usuario" element={<VistaUsuario />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
