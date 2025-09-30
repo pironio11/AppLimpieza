@@ -34,20 +34,20 @@
 
 /* Tema claro */
 .light-theme {
-  --bg: #f5f7fb;
-  --card-bg: #ffffff;
+  --bg: #FAF8F1;
+  --card-bg: #FFFEFB;
   --text: #1f2937;
   --muted: #6b7280;
   --primary: #2563eb;
   --primary-600: #1d4ed8;
   --ring: rgba(37, 99, 235, 0.35);
-  --border: #e5e7eb;
+  --border: #e7e2d9;
   --badge-bg: #f1f5ff;
   --badge-text: #1e40af;
   --badge-border: #e0e7ff;
-  --stat-bg: #fafafa;
-  --aside-bg: #f8fafc;
-  --button-bg: #ffffff;
+  --stat-bg: #faf7f0;
+  --aside-bg: #faf6ee;
+  --button-bg: #FFFEFB;
   --button-shadow: rgba(16, 24, 40, 0.04);
   --button-shadow-hover: rgba(2, 6, 23, 0.08);
   --card-shadow: rgba(2, 6, 23, 0.08);
@@ -56,12 +56,12 @@
   --warning: #f59e0b;
   --error: #ef4444;
   --info: #3b82f6;
-  --surface: #f9fafb;
-  --surface-hover: #f3f4f6;
-  --input-bg: #ffffff;
+  --surface: #FCFAF6;
+  --surface-hover: #F5F1E8;
+  --input-bg: #FFFEFB;
   --input-border: #d1d5db;
-  --navbar-bg: #ffffff;
-  --sidebar-bg: #f9fafb;
+  --navbar-bg: #FFFEFB;
+  --sidebar-bg: #FAF6EE;
 }
 
 /* Tema oscuro */
@@ -109,7 +109,7 @@ body {
 }
 
 .light-theme body {
-  background: linear-gradient(135deg, #eef2ff 0%, #f8fafc 100%);
+  background: linear-gradient(135deg, #fff7ed 0%, #faf3e7 100%);
 }
 
 .dark-theme body {
