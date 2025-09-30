@@ -1,8 +1,13 @@
+<<<<<<< HEAD
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase';
+=======
+import React from 'react';
+import './estilos/usuario.css';
+>>>>>>> c049734b8fe1fe312a9e26da208b474e93089c75
 
 const Usuario = () => {
   const [user, setUser] = useState(null);
@@ -71,6 +76,7 @@ const Usuario = () => {
   }
 
   return (
+<<<<<<< HEAD
     <div style={styles.container}>
       <h1 style={styles.title}>
         {user ? `Bienvenido, ${user.nombre || 'Usuario'}` : 'No has iniciado sesión'}
@@ -78,6 +84,13 @@ const Usuario = () => {
 
       {user ? (
         <div style={styles.card}>
+=======
+    <div className="usuario-component">
+      <div className="usuario-container">
+        <h1 className="usuario-title">Bienvenido, {user.nombre}</h1>
+
+        <div className="usuario-card">
+>>>>>>> c049734b8fe1fe312a9e26da208b474e93089c75
           <p><strong>Email:</strong> {user.email}</p>
           {user.rol && <p><strong>Rol:</strong> {user.rol}</p>}
           {user.dni && <p><strong>DNI:</strong> {user.dni}</p>}
@@ -92,6 +105,7 @@ const Usuario = () => {
             </button>
           </div>
         </div>
+<<<<<<< HEAD
       ) : (
         <div style={styles.card}>
           <p>No has iniciado sesión</p>
@@ -103,12 +117,27 @@ const Usuario = () => {
               Iniciar sesión
             </button>
           </div>
+=======
+
+        <div className="usuario-card">
+          <p className="usuario-info">
+            Gestioná tus reportes desde este panel. Usá el botón "Nuevo Reporte" de arriba y
+            la lista inferior para ver su estado.
+          </p>
+        </div>
+
+        <div className="usuario-button-container">
+          <button className="usuario-button" onClick={handleLogout}>
+            Cerrar sesión
+          </button>
+>>>>>>> c049734b8fe1fe312a9e26da208b474e93089c75
         </div>
       )}
     </div>
   );
 };
 
+<<<<<<< HEAD
 const styles = {
   container: {
     padding: '30px',
@@ -165,5 +194,7 @@ const styles = {
     '100%': { transform: 'rotate(360deg)' },
    },
 };
+=======
+>>>>>>> c049734b8fe1fe312a9e26da208b474e93089c75
 
 export default Usuario;

@@ -6,4 +6,4 @@ const MostrarFRMregistro =() => {
         <FRMregistro/>
     )
 }
-export default FRMregistro;
+export default MostrarFRMregistro;
