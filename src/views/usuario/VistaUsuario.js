@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import Usuario from '../../componentes/usuario';
 import './VistaUsuario.css';
@@ -35,8 +35,13 @@ function Vista_Usuario() {
   const [nowMs, setNowMs] = useState(Date.now());
   const { token, currentUser } = getSession();
 
+<<<<<<< HEAD
+  // Cargar reportes del usuario (memorizado para satisfacer reglas de hooks)
+  const fetchReportes = useCallback(async () => {
+=======
   // Cargar reportes del usuario
   const fetchReportes = () => {
+>>>>>>> c049734b8fe1fe312a9e26da208b474e93089c75
     setLoading(true);
     try {
       const data = reportStore.loadReports();
@@ -47,11 +52,11 @@ function Vista_Usuario() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     fetchReportes();
-  }, [token]);
+  }, [fetchReportes]);
 
   // Crear nuevo reporte
   const handleSubmit = (e) => {

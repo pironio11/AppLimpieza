@@ -1,5 +1,9 @@
 import React, { useState } from "react";
+<<<<<<< HEAD
+import { useNavigate } from 'react-router-dom';
+=======
 import { Link, useNavigate } from 'react-router-dom';
+>>>>>>> c049734b8fe1fe312a9e26da208b474e93089c75
 import "./estilos/FRM.css";
 import logoepet from '../imagenes/logoepet.jpg';
 import epetfoto from '../imagenes/epetfoto.jpg';
@@ -7,7 +11,15 @@ import googlefoto from '../imagenes/googleFoto.jpg';
 import { auth, googleProvider } from '../firebase/config';
 import { signInWithPopup } from 'firebase/auth';
 
+<<<<<<< HEAD
+const FRMregistro = () => {
+  const [nombre, setNombre] = useState('');
+  const [apellido, setApellido] = useState('');
+  const [dni, setDni] = useState('');
+  const [gmail, setGmail] = useState('');
+=======
 const FRMRegistre = () => {
+>>>>>>> c049734b8fe1fe312a9e26da208b474e93089c75
   const navigate = useNavigate();
   const [loginMode, setLoginMode] = useState(null);
   const [legajo, setLegajo] = useState('');
@@ -38,6 +50,18 @@ const FRMRegistre = () => {
     }
   };
 
+<<<<<<< HEAD
+  const handleRegister = (e) => {
+    e.preventDefault();
+    const nuevoUsuario = { nombre, apellido, dni, gmail };
+    localStorage.setItem('usuario', JSON.stringify(nuevoUsuario));
+    // ...redirigir o mostrar mensaje de éxito...
+  };
+
+  const handleGoogleLogin = () => {
+    // Aquí irá la lógica de login con Google/Firebase
+    alert('Funcionalidad de Google pendiente');
+=======
   const handleGoogleLogin = async () => {
     try {
       console.log('Iniciando autenticación con Google...');
@@ -71,6 +95,7 @@ const FRMRegistre = () => {
       console.error('Error en login con Google:', error);
       alert('No se pudo iniciar sesión con Google. Revisa la configuración de Firebase.');
     }
+>>>>>>> c049734b8fe1fe312a9e26da208b474e93089c75
   };
 
   return (
@@ -88,6 +113,41 @@ const FRMRegistre = () => {
             </div>
           </div>
 
+<<<<<<< HEAD
+      
+      <div className="botongoogle">
+        <button onClick={() => alert('¡FireBase en proceso!')}>
+          <img src={googlefoto} height={20} width={20} alt="Google" />
+          Inicia sesión con Google
+        </button>
+      </div>
+
+    
+      <div className="botones-login">
+        <div className="boton-admin">
+          <button onClick={() => handleLogin('admin')}>
+            <img src={googlefoto} height={20} width={20} alt="icon" />
+            Ingresar como Administrador
+          </button>
+        </div>
+
+        <div className="boton-usuario">
+          <button
+            onClick={() => handleLogin('usuario')}
+            className="btn-usuario"
+          >
+            Ingresar como Usuario
+          </button>
+        </div>
+      </div>
+
+      <div style={{ marginTop: '20px', textAlign: 'center' }}>
+        <p style={{ color: '#666', fontSize: '0.8rem', margin: '10px 0' }}>Acceso directo (Demo):</p>
+        <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+          <button onClick={() => navigate('/admin')} className="btn-demo">Admin</button>
+          <button onClick={() => navigate('/usuario')} className="btn-demo">Usuario</button>
+        </div>
+=======
           <div className="badge-list">
             <span className="badge">✓ Reportes en minutos</span>
             <span className="badge">✓ Asignación de tareas</span>
@@ -196,7 +256,39 @@ const FRMRegistre = () => {
             </ul>
           </div>
         </aside>
+>>>>>>> c049734b8fe1fe312a9e26da208b474e93089c75
       </div>
+
+      <form onSubmit={handleRegister}>
+        <input
+          type="text"
+          placeholder="Nombre"
+          value={nombre}
+          onChange={e => setNombre(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Apellido"
+          value={apellido}
+          onChange={e => setApellido(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="DNI"
+          value={dni}
+          onChange={e => setDni(e.target.value)}
+        />
+        <input
+          type="email"
+          placeholder="Gmail"
+          value={gmail}
+          onChange={e => setGmail(e.target.value)}
+        />
+        <button type="submit">Iniciar sesión</button>
+        <button type="button" style={{ marginLeft: '10px' }}>
+          Iniciar sesión con Google
+        </button>
+      </form>
     </div>
   );
 };
