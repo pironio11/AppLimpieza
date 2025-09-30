@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import Usuario from '../../componentes/usuario';
 import './VistaUsuario.css';
@@ -45,8 +45,8 @@ function Vista_Usuario() {
   });
   const { token, currentUser } = getSession();
 
-  // Cargar reportes del usuario
-  const fetchReportes = async () => {
+  // Cargar reportes del usuario (memorizado para satisfacer reglas de hooks)
+  const fetchReportes = useCallback(async () => {
     setLoading(true);
     try {
       const data = await reportesService.list({ token });
@@ -56,11 +56,11 @@ function Vista_Usuario() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     fetchReportes();
-  }, [token]);
+  }, [fetchReportes]);
 
   // Crear nuevo reporte
   const handleSubmit = async (e) => {
