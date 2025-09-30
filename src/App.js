@@ -8,11 +8,13 @@ import FRMRegistre from './componentes/FRMRegistre';
 import ReportesProblemas from './componentes/ReportesProblemas';
 import Configuracion from './componentes/Configuracion';
 import Tareas from './componentes/tareas';
+import ThemeToggle from './componentes/ThemeToggle';
 
 function App() {
   return (
     <Router>
       <div className="App">
+        <ThemeToggle />
         <Routes>
           <Route path="/" element={<FRMRegistre />} />
           <Route path="/admin" element={<VistaAdmin />} />
