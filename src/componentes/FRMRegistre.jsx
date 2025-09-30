@@ -119,6 +119,17 @@ const FRMRegistre = () => {
                     required
                   />
                 </div>
+                <div className="form-group">
+                  <label htmlFor="password">Contraseña</label>
+                  <input
+                    type="password"
+                    id="password"
+                    className="form-control"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </div>
                 <button type="submit" className="btn-primary btn-full">Ingresar</button>
                 <button type="button" onClick={() => setLoginMode(null)} className="btn-outline btn-full btn-back">Volver</button>
               </form>
