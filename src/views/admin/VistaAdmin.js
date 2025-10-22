@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import Usuario from '../../componentes/usuario';
+import { useAuth } from '../../hooks/useAuth';
 import './VistaAdmin.css';
 
 // INICIO SESIÓN 
@@ -58,6 +59,12 @@ function Vista_Admin() {
   const [editMode, setEditMode] = useState(false);
   const [editData, setEditData] = useState({});
   const { token } = getSession();
+  const { user } = useAuth();
+
+  // Redirigir si no es admin
+  if (!user || user.rol !== 'Admin') {
+    return <Navigate to="/login" />;
+  }
 
   // Cargar usuarios
   const fetchUsers = async () => {

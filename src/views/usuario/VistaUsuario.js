@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import Usuario from '../../componentes/usuario';
 import './VistaUsuario.css';
 import { reportStore, getTTLms } from '../../utils/reportStore';
+import { useAuth } from '../../hooks/useAuth';
 
 // INICIO SESIÓN 
 function getSession() {
@@ -34,6 +35,11 @@ function Vista_Usuario() {
   });
   const [nowMs, setNowMs] = useState(Date.now());
   const { token, currentUser } = getSession();
+  const { user } = useAuth();
+
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
 
   // Cargar reportes del usuario (memorizado para satisfacer reglas de hooks)
   const fetchReportes = useCallback(async () => {
