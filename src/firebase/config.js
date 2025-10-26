@@ -2,7 +2,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
 
 // Configuración de Firebase
 const firebaseConfig = {
@@ -14,23 +13,31 @@ const firebaseConfig = {
   appId: process.env.REACT_APP_FIREBASE_APP_ID
 };
 
+// Inicializa Firebase
+const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+
+// Configurar persistencia
+auth.setPersistence('local');
+
+// Proveedor de Google (para signInWithPopup)
+export const googleProvider = new GoogleAuthProvider();
+
 // Validar configuración
 const isValidConfig = firebaseConfig.apiKey && 
                      firebaseConfig.authDomain && 
                      firebaseConfig.projectId;
 
-// Inicializa Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const storage = getStorage(app);
-const googleProvider = new GoogleAuthProvider();
-
 // Verificar configuración en consola
-console.log('🔍 Configuración de Firebase cargada:');
-console.log('API Key:', firebaseConfig.apiKey ? '✅ Configurada' : '❌ Faltante');
-console.log('Auth Domain:', firebaseConfig.authDomain || '❌ Faltante');
-console.log('Project ID:', firebaseConfig.projectId || '❌ Faltante');
+console.log('🔍 Configuración de Firebase cargada:', {
+  apiKey: firebaseConfig.apiKey ? '✅ Configurada' : '❌ Faltante',
+  authDomain: firebaseConfig.authDomain ? '✅ Configurada' : '❌ Faltante',
+  projectId: firebaseConfig.projectId ? '✅ Configurada' : '❌ Faltante', 
+  storageBucket: firebaseConfig.storageBucket ? '✅ Configurada' : '❌ Faltante',
+  messagingSenderId: firebaseConfig.messagingSenderId ? '✅ Configurada' : '❌ Faltante',
+  appId: firebaseConfig.appId ? '✅ Configurada' : '❌ Faltante' 
+});
 
 if (!isValidConfig) {
   console.error('❌ Firebase no está configurado correctamente. Necesitas:');
@@ -41,4 +48,4 @@ if (!isValidConfig) {
   console.log('✅ Firebase está configurado correctamente');
 }
 
-export { auth, db, storage, googleProvider, app as default };
+export { app as default };
