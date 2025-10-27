@@ -4,8 +4,10 @@ import "./estilos/FRM.css";
 import logoepet from '../imagenes/logoepet.jpg';
 import epetfoto from '../imagenes/epetfoto.jpg';
 import googlefoto from '../imagenes/googleFoto.jpg';
-import { auth, googleProvider } from '../firebase/config';
-import { signInWithPopup } from 'firebase/auth';
+import { auth, googleProvider, db } from '../firebase/config';
+import { signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc, getDoc, collection, getDocs } from 'firebase/firestore';
+
 
 const FRMRegistre = () => {
   const navigate = useNavigate();
@@ -13,20 +15,64 @@ const FRMRegistre = () => {
   const [legajo, setLegajo] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);
+  const handleEmailLogin = async (e) => {
+    e.preventDefault();
+    setError(null);
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
 
-  const handleLogin = (tipoUsuario) => {
-    localStorage.setItem('auth.token', 'demo-token');
+      // Buscar rol en Firestore
+      const userDoc = await getDoc(doc(db, 'usuarios', user.uid));
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        if (userData.role === 'admin') {
+          navigate('/admin');
+        } else {
+          navigate('/usuario');
+        }
+      } else {
+        // Usuario autenticado pero no existe en collection -> crear como usuario
+        await setDoc(doc(db, 'usuarios', user.uid), {
+          email: user.email,
+          role: 'usuario',
+          createdAt: new Date(),
+          displayName: user.displayName || ''
+        });
+        navigate('/usuario');
+      }
+    } catch (err) {
+      console.error('Error login:', err);
+      setError('USUARIO NO REGISTRADO o credenciales inválidas');
+    }
+  };
 
-    if (tipoUsuario === 'admin') {
-      localStorage.setItem('auth.user', JSON.stringify({
-        id: 1,
-        nombre: 'Admin',
-        apellido: 'Sistema',
-        email: 'admin@limpieza.com',
-        rol: 'Admin'
-      }));
+  // Registro con email/password
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setError(null);
+    try {
+      // Crear usuario en Auth
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Verificar si es el primer usuario para darle rol admin
+      const usersCollection = await getDocs(collection(db, 'usuarios'));
+      const isFirstUser = usersCollection.empty;
+
+      await setDoc(doc(db, 'usuarios', user.uid), {
+        email: user.email,
+        role: isFirstUser ? 'admin' : 'usuario',
+        createdAt: new Date(),
+        displayName: user.displayName || ''
+      });
+
+      if (isFirstUser) {
+        alert('Registrado como administrador (primer usuario)');
       navigate('/admin');
     } else {
+      alert('Registro exitoso. Ya puedes iniciar sesión.');
       localStorage.setItem('auth.user', JSON.stringify({
         id: 2,
         nombre: 'Usuario',
@@ -35,8 +81,12 @@ const FRMRegistre = () => {
         rol: 'Usuario'
       }));
       navigate('/usuario');
+      }
+    } catch (err) {
+      console.error('Error registro:', err);
+      setError(err.message || 'Error en el registro');
     }
-  };
+  }
 
   const handleGoogleLogin = async () => {
     try {
@@ -106,16 +156,16 @@ const FRMRegistre = () => {
 
           <div className="login-forms">
             {loginMode === 'admin' ? (
-              <form onSubmit={(e) => { e.preventDefault(); handleLogin('admin'); }} className="login-form">
-                <h3 className="form-title">Ingreso Administrador</h3>
+              <form onSubmit={handleEmailLogin} className="login-form">
+                <h3 className="form-title">Iniciar sesión</h3>
                 <div className="form-group">
-                  <label htmlFor="legajo">N° de Legajo</label>
+                  <label htmlFor="email">Correo electrónico</label>
                   <input
-                    type="text"
-                    id="legajo"
+                    type="email"
+                    id="email"
                     className="form-control"
-                    value={legajo}
-                    onChange={(e) => setLegajo(e.target.value)}
+                     value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     required
                   />
                 </div>
@@ -130,14 +180,16 @@ const FRMRegistre = () => {
                     required
                   />
                 </div>
-                <button type="submit" className="btn-primary btn-full">Ingresar</button>
+                {error && <div className="error" style={{color: 'red'}}>{error}</div>}
+                <button type="submit" className="btn-primary btn-full">Iniciar sesión</button>
+
                 <button type="button" onClick={() => setLoginMode(null)} className="btn-outline btn-full btn-back">Volver</button>
               </form>
             ) : loginMode === 'user' ? (
-              <form onSubmit={(e) => { e.preventDefault(); handleLogin('usuario'); }} className="login-form">
-                <h3 className="form-title">Ingreso Usuario</h3>
+              <form onSubmit={handleRegister} className="login-form">
+                <h3 className="form-title">Registrarse</h3>
                 <div className="form-group">
-                  <label htmlFor="email">Gmail</label>
+                  <label htmlFor="email">Correo electrónico</label>
                   <input
                     type="email"
                     id="email"
@@ -156,16 +208,19 @@ const FRMRegistre = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    minLength={6}
                   />
                 </div>
-                <button type="submit" className="btn-primary btn-full">Ingresar</button>
+                 {error && <div className="error" style={{color: 'red'}}>{error}</div>}
+                <button type="submit" className="btn-primary btn-full">Registrarse</button>
+
                 <button type="button" onClick={() => setLoginMode(null)} className="btn-outline btn-full btn-back">Volver</button>
               </form>
             ) : (
               <div className="botones-login">
                 <div className="boton-admin">
                   <button className="btn-outline btn-full" onClick={() => setLoginMode('admin')}>
-                    Ingresar como Administrador
+                    Iniciar sesión
                   </button>
                 </div>
                 <div className="boton-usuario">
@@ -173,7 +228,7 @@ const FRMRegistre = () => {
                     onClick={() => setLoginMode('user')}
                     className="btn-usuario btn-full btn-outline"
                   >
-                    Ingresar como Usuario
+                    Registrarse
                   </button>
                 </div>
               </div>
