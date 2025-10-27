@@ -39,6 +39,55 @@ REACT_APP_FIREBASE_APP_ID=1:123456789:web:abcdef123456
 # Google OAuth
 REACT_APP_GOOGLE_CLIENT_ID=tu-client-id.apps.googleusercontent.com
 
-# Environment
-REACT_APP_ENV=development
-⚠️ Alerta de Seguridad: Verifique que el archivo .gitignore incluya la línea .env para evitar subir credenciales sensibles.4. Scripts de Ejecución (Apéndice F)Utilice los siguientes comandos para trabajar con el proyecto:ComandoDescripciónnpm startInicia el servidor de desarrollo en http://localhost:3000. Soporta Hot Reload.npm run buildCompila la aplicación para producción, creando una carpeta /build optimizada y lista para el deploy.npm testEjecuta la suite de pruebas automatizadas.5. Estructura y Tecnologías Clave5.1. Estructura de CarpetasLa lógica principal de la aplicación reside en la carpeta src/ (Ver /docs/estructura.md para el mapa completo).DirectorioPropósitosrc/views/Contiene los componentes de página completa (ej: VistaAdmin.jsx).src/componentes/Componentes de UI reutilizables (ej: Navbar, ThemeToggle).src/contexts/Lógica de estado global (ej: ThemeContext.js).src/firebase/Inicialización y configuración del SDK de Firebase.5.2. Dependencias Relevantes (Apéndice E)PaqueteRolreactFramework principal de la UI.react-router-domManejo de navegación entre /admin y /usuario.firebaseBackend as a Service (Autenticación y Base de Datos).@google-cloud/local-authSoporte para el login de Google.6. Estándares y ConvencionesConvención de Nombres: Utilizar PascalCase para los componentes de React (MiComponente.jsx).Estilos: Los estilos se manejan mediante CSS Modules (.css anidados en componentes/estilos/).Roles: La lógica de permisos debe implementarse en la capa de Routing (App.js) y reforzarse en los componentes.
+## 4. Configuración de Variables de Entorno (FIREBASE)
+
+    ```env
+    # Environment
+    REACT_APP_ENV=development
+    ```
+
+> **⚠️ Alerta de Seguridad:** Verifique que el archivo `.gitignore` incluya la línea `.env` para evitar subir credenciales sensibles.
+
+---
+
+## 4. Scripts de Ejecución (Apéndice F)
+
+Utilice los siguientes comandos para trabajar con el proyecto:
+
+| Comando | Descripción |
+| :--- | :--- |
+| `npm start` | Inicia el servidor de desarrollo en http://localhost:3000. Soporta Hot Reload. |
+| `npm run build` | Compila la aplicación para producción, creando una carpeta /build optimizada y lista para el deploy. |
+| `npm test` | Ejecuta la suite de pruebas automatizadas. |
+
+---
+
+## 5. Estructura y Tecnologías Clave
+
+### 5.1. Estructura de Carpetas
+
+La lógica principal de la aplicación reside en la carpeta `src/`. Consulte `/docs/estructura.md` para el mapa completo de carpetas.
+
+| Directorio | Propósito |
+| :--- | :--- |
+| `src/views/` | Contiene los componentes de página completa (ej: VistaAdmin.jsx). |
+| `src/componentes/` | Componentes de UI reutilizables (ej: Navbar, ThemeToggle). |
+| `src/contexts/` | Lógica de estado global (ej: ThemeContext.js). |
+| `src/firebase/` | Inicialización y configuración del SDK de Firebase. |
+
+### 5.2. Dependencias Relevantes (Apéndice E)
+
+| Paquete | Rol |
+| :--- | :--- |
+| `react` | Framework principal de la UI. |
+| `react-router-dom` | Manejo de navegación entre /admin y /usuario. |
+| `firebase` | Backend as a Service (Autenticación y Base de Datos). |
+| `@google-cloud/local-auth` | Soporte para el login de Google. |
+
+---
+
+## 6. Estándares y Convenciones
+
+* **Convención de Nombres:** Utilizar **PascalCase** para los componentes de React (`MiComponente.jsx`).
+* **Estilos:** Los estilos se manejan mediante **CSS Modules** (`.css` anidados en componentes/estilos/).
+* **Roles:** La lógica de permisos debe implementarse en la capa de Routing (`App.js`) y reforzarse en los componentes.
