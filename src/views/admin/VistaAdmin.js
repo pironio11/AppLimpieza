@@ -59,13 +59,7 @@ function Vista_Admin() {
   const [editMode, setEditMode] = useState(false);
   const [editData, setEditData] = useState({});
   const { token } = getSession();
-   const { user } = useAuth();
-
-  // Redirigir si no es admin
-  if (!user || user.rol !== 'Admin') {
-    return <Navigate to="/login" />;
-  }
-
+  const { user } = useAuth();
 
   // Cargar usuarios
   const fetchUsers = async () => {

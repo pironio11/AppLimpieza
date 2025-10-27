@@ -35,8 +35,15 @@ function Vista_Usuario() {
   });
   const [nowMs, setNowMs] = useState(Date.now());
   const { token, currentUser } = getSession();
-    const { user } = useAuth();
+  const { user } = useAuth();
 
+  // Tick de 1s para actualizar visualmente los contadores de tiempo restante
+  useEffect(() => {
+    const timer = setInterval(() => setNowMs(Date.now()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Redirigir si no hay usuario
   if (!user) {
     return <Navigate to="/login" />;
   }
@@ -57,6 +64,14 @@ function Vista_Usuario() {
 
   useEffect(() => {
     fetchReportes();
+  }, [fetchReportes]);
+
+  // Refresco automático según TTL (si TTL <= 60s, refrescar cada 2s; si no, cada 1h)
+  useEffect(() => {
+    const ttl = getTTLms();
+    const intervalMs = ttl <= 60 * 1000 ? 2000 : 60 * 60 * 1000;
+    const id = setInterval(fetchReportes, intervalMs);
+    return () => clearInterval(id);
   }, [fetchReportes]);
 
   // Crear nuevo reporte
@@ -83,7 +98,11 @@ function Vista_Usuario() {
     const intervalMs = ttl <= 60 * 1000 ? 2000 : 60 * 60 * 1000;
     const id = setInterval(fetchReportes, intervalMs);
     return () => clearInterval(id);
-  }, []);
+  }, [fetchReportes]);
+
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
 
   const handleChange = (e) => {
     setNewReporte({ ...newReporte, [e.target.name]: e.target.value });
@@ -104,12 +123,6 @@ function Vista_Usuario() {
       setReportes((prev) => prev.map((r) => r.id === reporte.id ? { ...r, estado: nextEstado } : r));
     }
   };
-
-  // Tick de 1s para actualizar visualmente los contadores de tiempo restante
-  useEffect(() => {
-    const timer = setInterval(() => setNowMs(Date.now()), 1000);
-    return () => clearInterval(timer);
-  }, []);
 
   const calcRemainingMs = (createdAt) => {
     const ttl = getTTLms();
