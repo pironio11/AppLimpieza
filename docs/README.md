@@ -25,7 +25,7 @@ Siga estos pasos para levantar la aplicación en su entorno de desarrollo.
 Abra su terminal y ejecute:
 ```bash
 # Clonar el proyecto
-git clone [URL_DEL_REPOSITORIO_DE_GIT_AQUÍ]
+git clone https://github.com/pironio11/AppLimpieza.git
 # Navegar a la carpeta
 cd AppLimpieza
 3. Instalar Dependencias
