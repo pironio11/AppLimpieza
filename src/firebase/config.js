@@ -1,6 +1,6 @@
 // Importa las funciones necesarias de Firebase
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 // Configuración de Firebase
@@ -20,6 +20,9 @@ export const db = getFirestore(app);
 
 // Configurar persistencia
 auth.setPersistence('local');
+
+// Proveedor de Google (para signInWithPopup)
+export const googleProvider = new GoogleAuthProvider();
 
 // Validar configuración
 const isValidConfig = firebaseConfig.apiKey && 
