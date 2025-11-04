@@ -1,0 +1,81 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Permitir acceso mientras estás en desarrollo (¡REMOVER EN PRODUCCIÓN!)
+    match /{document=**} {
+      allow read, write: if true;
+    }
+    // Funciones helper
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+             get(/databases/$(database)/documents/usuario/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Reglas para la colección usuario
+    match /usuario/{userId} {
+      allow read: if isAuthenticated() && (isOwner(userId) || isAdmin());
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && (isOwner(userId) || isAdmin());
+      allow delete: if isAdmin();
+    }
+    
+    // Reglas para reportes de problemas
+    match /reportes/{reportId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && (
+        // El creador puede editar su propio reporte
+        resource.data.userId == request.auth.uid ||
+        // Los admins pueden actualizar cualquier reporte
+        isAdmin()
+      );
+      allow delete: if isAdmin();
+    }
+    
+    // Reglas para tareas
+    match /tareas/{tareaId} {
+      allow read: if isAuthenticated();
+      allow create: if isAdmin();
+      allow update: if isAuthenticated() && (
+        // El encargado puede actualizar el estado
+        resource.data.encargadoId == request.auth.uid ||
+        // Los admins pueden modificar todo
+        isAdmin()
+      );
+      allow delete: if isAdmin();
+    }
+    
+    // Reglas para chat
+    match /chats/{chatId} {
+      allow read: if isAuthenticated() && (
+        // Los participantes del chat pueden leerlo
+        request.auth.uid in resource.data.participantes ||
+        isAdmin()
+      );
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && request.auth.uid in resource.data.participantes;
+      allow delete: if isAdmin();
+      
+      // Submensajes del chat
+      match /mensajes/{mensajeId} {
+        allow read: if isAuthenticated() && (
+          request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participantes ||
+          isAdmin()
+        );
+        allow create: if isAuthenticated() && 
+          request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participantes;
+        allow update: if false; // Los mensajes no se pueden editar
+        allow delete: if isAdmin();
+      }
+    }
+  }
+}

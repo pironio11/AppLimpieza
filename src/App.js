@@ -11,7 +11,7 @@ import Tareas from './componentes/tareas';
 import ThemeToggle from './componentes/ThemeToggle';
 import { auth } from './firebase/config';
 import { getRedirectResult } from 'firebase/auth';
-
+import { AuthProvider } from './hooks/useAuthProvider';
 
 
 
@@ -30,6 +30,7 @@ function App() {
       });
   }, []);
   return (
+    <AuthProvider>
     <Router>
       <div className="App">
         <ThemeToggle />
@@ -40,6 +41,7 @@ function App() {
         </Routes>
       </div>
     </Router>
+    </AuthProvider>
   );
 }
 

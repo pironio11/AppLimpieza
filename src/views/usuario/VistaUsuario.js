@@ -3,7 +3,7 @@ import { Link, Navigate } from 'react-router-dom';
 import Usuario from '../../componentes/usuario';
 import './VistaUsuario.css';
 import { reportStore, getTTLms } from '../../utils/reportStore';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '../../hooks/useAuthProvider';
 
 // INICIO SESIÓN 
 function getSession() {
@@ -45,7 +45,7 @@ function Vista_Usuario() {
 
   // Redirigir si no hay usuario
   if (!user) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/" />;
   }
 
   // Cargar reportes del usuario (memorizado para satisfacer reglas de hooks)
@@ -101,7 +101,7 @@ function Vista_Usuario() {
   }, [fetchReportes]);
 
   if (!user) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/" />;
   }
 
   const handleChange = (e) => {
