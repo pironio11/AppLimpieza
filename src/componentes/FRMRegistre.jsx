@@ -167,12 +167,6 @@ const FRMRegistre = () => {
                 >
                   Volver
                 </button>
-
-                <div className="form-footer">
-                  <Link to="/reset-password" className="forgot-password">
-                    ¿Olvidaste tu contraseña?
-                  </Link>
-                </div>
               </form>
             ) : loginMode === 'user' ? (
               <form onSubmit={handleRegister} className="login-form">
