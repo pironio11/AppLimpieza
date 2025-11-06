@@ -116,7 +116,7 @@ const FRMRegistre = () => {
             </button>
           </div>
 
-          <div className="divider"><span>o continúa como</span></div>
+          <div className="divider"><span>Eligi tu modo de acceso</span></div>
 
           <div className="login-forms">
             {loginMode === 'admin' ? (
