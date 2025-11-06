@@ -12,20 +12,20 @@ export const Login = () => {
   const provider = new GoogleAuthProvider();
 
      const handleGoogleLogin = async () => {
-    // Verificar si Firebase está configurado
+  
     const isFirebaseConfigured = process.env.REACT_APP_FIREBASE_API_KEY && 
                                !process.env.REACT_APP_FIREBASE_API_KEY.includes('Demo');
 
            if (isFirebaseConfigured) {
       try {
-        // Primero intenta con signInWithPopup
+       
         try {
           const result = await signInWithPopup(auth, provider);
-          // Login exitoso
+          
           handleSuccessfulLogin(result.user);
         } catch (popupError) {
           if (popupError.code === 'auth/popup-blocked') {
-            // Si el popup es bloqueado, usa redirect como fallback
+            
             await signInWithRedirect(auth, provider);
           } else {
             throw popupError;
@@ -37,7 +37,7 @@ export const Login = () => {
         handleDemoLogin();
       }
     } else {
-      // Modo demo directo sin intentar Firebase
+      
       handleDemoLogin();
     }
   };
@@ -64,7 +64,7 @@ export const Login = () => {
 
   const handleSuccessfulLogin = async (user) => {
     try {
-      // Primero verificamos si hay algún usuario en la colección
+      
       const usersCollection = await getDocs(collection(db, 'usuarios'));
       const isFirstUser = usersCollection.empty;
 
@@ -72,12 +72,12 @@ export const Login = () => {
       if (userDoc.exists()) {
         const userData = userDoc.data();
         if (userData.role === 'admin') {
-          navigate('/admin');  // Corregimos la ruta
+          navigate('/admin'); 
         } else {
           navigate('/usuario');
         }
       } else {
-        // Si es el primer usuario, será admin, si no, será usuario normal
+       
         await setDoc(doc(db, 'usuarios', user.uid), {
           email: user.email,
           role: isFirstUser ? 'admin' : 'usuario',
@@ -87,7 +87,7 @@ export const Login = () => {
         });
         navigate(isFirstUser ? '/admin' : '/usuario');
         
-        // Mostrar mensaje de bienvenida
+       
         alert(isFirstUser ? 
           '¡Bienvenido! Has sido registrado como el primer usuario y tienes privilegios de administrador.' :
           '¡Bienvenido! Tu cuenta ha sido registrada exitosamente.');
@@ -105,15 +105,15 @@ export const Login = () => {
     const displayName = e.target.name?.value || email.split('@')[0];
 
      try {
-      // Crear usuario en Firebase Auth
+      
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Verificar si es el primer usuario
+      
       const usersCollection = await getDocs(collection(db, 'usuarios'));
       const isFirstUser = usersCollection.empty;
 
-      // Guardar datos adicionales en Firestore
+      
       await setDoc(doc(db, 'usuarios', user.uid), {
         email: user.email,
         role: isFirstUser ? 'admin' : 'usuario',
@@ -122,12 +122,12 @@ export const Login = () => {
         registrationType: 'manual'
       });
 
-      // Mostrar mensaje de éxito
+      
       alert(isFirstUser ? 
         '¡Registro exitoso! Has sido registrado como administrador.' :
         '¡Registro exitoso! Tu cuenta ha sido creada como usuario.');
 
-      // Redirigir según el rol
+      
       navigate(isFirstUser ? '/admin' : '/usuario');
     } catch (error) {
       console.error('Error en el registro:', error);

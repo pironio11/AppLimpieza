@@ -8,7 +8,7 @@ const Usuario = () => {
   const { user, logout, loading } = useAuth();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  // Redirigir si no hay usuario (después del logout)
+
   useEffect(() => {
     if (!loading && !user) {
       navigate('/');
@@ -19,7 +19,7 @@ const Usuario = () => {
     try {
       setIsLoggingOut(true);
       await logout();
-      // No navegues aquí, el useEffect de arriba lo hará
+
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
       setIsLoggingOut(false);
@@ -36,7 +36,7 @@ const Usuario = () => {
   }
   
   if (!user) {
-    return null; // El useEffect redirigirá
+    return null; 
   }
 
   return (
