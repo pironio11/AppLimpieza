@@ -187,13 +187,13 @@ function Vista_Admin() {
   };
 
   return (
-    <div className="vista-admin">
+    <div className="vista-administrador">
       <Usuario />
       <h2>Lista de Usuarios</h2>
       {loading ? (
-        <p className="loading">Cargando...</p>
+        <p className="cargando">Cargando</p>
       ) : (
-        <table className="users-table">
+        <table className="tabla-usuarios">
           <thead>
             <tr>
               <th>ID</th>
@@ -219,7 +219,7 @@ function Vista_Admin() {
                 <td>{u.estado}</td>
                 <td>{u.ultimaAccion}</td>
                 <td>
-                  <button className="btn-ver-perfil" onClick={() => setSelectedUser(u)}>
+                  <button className="boton-ver-perfil" onClick={() => setSelectedUser(u)}>
                     Ver perfil
                   </button>
                 </td>
@@ -228,10 +228,10 @@ function Vista_Admin() {
           </tbody>
         </table>
       )}
-      <div className="admin-section" style={{ marginTop: '2rem' }}>
+          <div className="seccion-admin" style={{ marginTop: '2rem' }}>
         <h2>Todos los Reportes</h2>
         <button 
-          className="btn-toggle-section"
+          className="boton-alternar-seccion"
           onClick={() => setShowReportes(!showReportes)}
           style={{ marginBottom: '1rem' }}
         >
@@ -245,7 +245,7 @@ function Vista_Admin() {
                 Total de reportes: <strong>{reportes.length}</strong>
               </p>
               <button 
-                className="btn-nuevo-reporte"
+                className="boton-nuevo-reporte"
                 onClick={fetchReportes}
                 style={{ padding: '0.5rem 1rem' }}
               >
@@ -309,7 +309,7 @@ function Vista_Admin() {
 
      
     
-      <Link to="/" className="link-inicio" style={{ marginTop: '2rem', display: 'inline-block' }}>
+      <Link to="/" className="enlace-inicio" style={{ marginTop: '2rem', display: 'inline-block' }}>
         Cerrar Sesión
       </Link>
 
@@ -330,7 +330,7 @@ function Vista_Admin() {
               </div>
               <div className="modal-buttons">
                 <button 
-                    className="btn-primary" 
+                    className="boton-primario" 
                     onClick={() => alternarRol(selectedUser).then(() => setSelectedUser(null))}
                     style={{ marginRight: '0.5rem' }}
                 >
@@ -338,15 +338,15 @@ function Vista_Admin() {
                 </button>
 
                 <button 
-                    className="btn-secondary" 
+                    className="boton-secundario" 
                     onClick={() => alternarBaja(selectedUser).then(() => setSelectedUser(null))}
                     style={{ marginRight: '0.5rem' }}
                 >
                     {(String(selectedUser.estado || '').toLowerCase() === 'baja') ? 'Activar Usuario' : 'Dar de Baja'}
                 </button>
 
-                <button className="btn-danger" onClick={eliminarUsuario}>Eliminar</button>
-                <button className="btn-cancel" onClick={cerrarModal}>Cerrar</button>
+                <button className="boton-peligro" onClick={eliminarUsuario}>Eliminar</button>
+                <button className="boton-cancelar" onClick={cerrarModal}>Cerrar</button>
               </div>
             </div>
           </div>
