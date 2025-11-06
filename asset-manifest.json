@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/AppLimpieza/static/css/main.f9d0a6a6.css",
+    "main.js": "/AppLimpieza/static/js/main.2b718435.js",
+    "static/js/453.09bf06c6.chunk.js": "/AppLimpieza/static/js/453.09bf06c6.chunk.js",
+    "index.html": "/AppLimpieza/index.html",
+    "main.f9d0a6a6.css.map": "/AppLimpieza/static/css/main.f9d0a6a6.css.map",
+    "main.2b718435.js.map": "/AppLimpieza/static/js/main.2b718435.js.map",
+    "453.09bf06c6.chunk.js.map": "/AppLimpieza/static/js/453.09bf06c6.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f9d0a6a6.css",
+    "static/js/main.2b718435.js"
+  ]
+}
