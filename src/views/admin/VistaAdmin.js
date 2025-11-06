@@ -331,9 +331,7 @@ function Vista_Admin() {
         )}
       </div>
 
-      <Link to="/" className="link-inicio" style={{ marginTop: '2rem', display: 'inline-block' }}>
-        Cerrar Sesión
-      </Link>
+     
 
       {/* Modal para mostrar/editar/eliminar usuario */}
       {selectedUser && (
