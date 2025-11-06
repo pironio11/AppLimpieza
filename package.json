@@ -1,7 +1,7 @@
 {
   "name": "limpieza",
   "version": "0.1.0",
- 
+  "private": true,
   "dependencies": {
     "@google-cloud/local-auth": "^3.0.1",
     "@testing-library/dom": "^10.4.0",
