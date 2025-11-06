@@ -125,16 +125,11 @@ function Vista_Usuario() {
     return order[nextIdx];
   };
 
+  // Los usuarios normales no pueden cambiar el estado
+  // Esta función ya no se usa, el estado solo lo cambian los admins
   const handleToggleEstado = async (reporte) => {
-    const nextEstado = cycleEstado(reporte.estado);
-    try {
-      const updated = await reportStore.updateReport(reporte.id, { estado: nextEstado });
-      if (updated) {
-        setReportes((prev) => prev.map((r) => r.id === reporte.id ? { ...r, estado: nextEstado } : r));
-      }
-    } catch (err) {
-      console.error('Error al actualizar estado:', err);
-    }
+    // Deshabilitado para usuarios normales
+    console.log('Los usuarios no pueden cambiar el estado del reporte');
   };
 
   const calcRemainingMs = (createdAt) => {
@@ -245,9 +240,7 @@ function Vista_Usuario() {
               <div
                 key={reporte.id}
                 className={`reporte-card ${reporte.estado.toLowerCase().replace(' ', '-')}`}
-                onClick={() => handleToggleEstado(reporte)}
-                title="Click para cambiar estado"
-                style={{ cursor: 'pointer' }}
+                style={{ cursor: 'default' }}
               >
                 <div className="reporte-header">
                   <h4>{reporte.area}</h4>
