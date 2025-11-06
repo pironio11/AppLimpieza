@@ -1,5 +1,5 @@
 /* Vista Admin - Estilos principales */
-.vista-admin {
+.vista-administrador {
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
@@ -9,7 +9,7 @@
   transition: background-color 0.3s ease;
 }
 
-.vista-admin h2 {
+.vista-administrador h2 {
   color: var(--text);
   margin-bottom: 30px;
   font-size: 2rem;
@@ -21,7 +21,7 @@
 }
 
 /* Loading spinner */
-.loading {
+.cargando {
   text-align: center;
   font-size: 1.2rem;
   color: var(--muted);
@@ -30,7 +30,7 @@
 }
 
 /* Tabla de usuarios */
-.users-table {
+.tabla-usuarios {
   width: 100%;
   border-collapse: collapse;
   background: var(--card-bg);
@@ -74,7 +74,7 @@
 }
 
 /* Botón Ver perfil */
-.btn-ver-perfil {
+.boton-ver-perfil {
   background: transparent;
   color: var(--primary);
   border: 1px solid var(--primary);
@@ -87,13 +87,13 @@
   box-shadow: none;
 }
 
-.btn-ver-perfil:hover {
+.boton-ver-perfil:hover {
   background-color: var(--primary);
   color: #fff;
 }
 
 /* Link volver al inicio */
-.link-inicio {
+.enlace-inicio {
   display: inline-block;
   color: #3498db;
   text-decoration: none;
@@ -105,7 +105,7 @@
   margin-top: 20px;
 }
 
-.link-inicio:hover {
+.enlace-inicio:hover {
   background-color: #3498db;
   color: white;
   transform: translateY(-2px);
@@ -124,7 +124,7 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  backdrop-filter: blur(5px);
+  
   animation: fadeIn 0.3s ease;
 }
 
@@ -241,7 +241,7 @@
   flex-wrap: wrap;
 }
 
-.btn-primary {
+.boton-primario {
   background: var(--primary);
   color: #fff;
   border: 1px solid var(--primary);
@@ -253,11 +253,11 @@
   box-shadow: none;
 }
 
-.btn-primary:hover {
+.boton-primario:hover {
   opacity: 0.9;
 }
 
-.btn-secondary {
+.boton-secundario {
   background: transparent;
   color: var(--primary);
   border: 1px solid var(--primary);
@@ -274,7 +274,7 @@
   color: #fff;
 }
 
-.btn-danger {
+.boton-peligro {
   background: #d63031;
   color: #fff;
   border: 1px solid #d63031;
@@ -286,7 +286,7 @@
   box-shadow: none;
 }
 
-.btn-danger:hover {
+.boton-peligro:hover {
   opacity: 0.9;
 }
 
@@ -309,7 +309,7 @@
   border-color: #d63031;
 }
 
-.btn-cancel {
+.boton-cancelar {
   background: transparent;
   color: var(--text);
   border: 1px solid var(--border);
@@ -321,7 +321,7 @@
   box-shadow: none;
 }
 
-.btn-cancel:hover {
+.boton-cancelar:hover {
   background-color: var(--surface-hover);
 }
 
@@ -368,11 +368,11 @@
 }
 
 /* Estilos para secciones de admin */
-.admin-section {
+.seccion-admin {
   margin-bottom: 2rem;
 }
 
-.btn-toggle-section {
+.boton-alternar-seccion {
   background: linear-gradient(135deg, #6c5ce7 0%, #5f3dc4 100%);
   color: white;
   border: none;
@@ -384,7 +384,7 @@
   box-shadow: 0 2px 4px rgba(108, 92, 231, 0.3);
 }
 
-.btn-toggle-section:hover {
+.boton-alternar-seccion:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(108, 92, 231, 0.4);
 }
