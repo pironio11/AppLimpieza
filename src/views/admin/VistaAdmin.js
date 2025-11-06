@@ -51,6 +51,12 @@ function Vista_Admin() {
   const [editData, setEditData] = useState({});
   const { token } = obtenerSesion();
   const { user } = useAuth();
+  
+  // Estados para reportes
+  const [reportes, setReportes] = useState([]);
+  const [loadingReportes, setLoadingReportes] = useState(true);
+  const [nowMs, setNowMs] = useState(Date.now());
+  const [showReportes, setShowReportes] = useState(true);
 
   // Cargar usuarios
   const cargarUsuarios = async () => {
@@ -69,6 +75,25 @@ function Vista_Admin() {
     cargarUsuarios();
     // eslint-disable-next-line
   }, [token]);
+
+  // Cargar reportes inicialmente
+  useEffect(() => {
+    fetchReportes();
+  }, []);
+
+  // Actualizar el contador de tiempo restante cada segundo
+  useEffect(() => {
+    const timer = setInterval(() => setNowMs(Date.now()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Refresco automático de reportes
+  useEffect(() => {
+    const ttl = getTTLms();
+    const intervalMs = ttl <= 60 * 1000 ? 2000 : 60 * 60 * 1000;
+    const id = setInterval(fetchReportes, intervalMs);
+    return () => clearInterval(id);
+  }, []);
 
   // Redirigir si no hay usuario o no es admin
   if (!user) {
@@ -130,6 +155,60 @@ function Vista_Admin() {
     setEditData({ ...editData, [e.target.name]: e.target.value });
   };
 
+  // Funciones para gestión de reportes
+  const fetchReportes = async () => {
+    setLoadingReportes(true);
+    try {
+      const data = await reportStore.loadReports();
+      setReportes(data.map(normalizeReporte));
+    } catch (err) {
+      console.warn('Error cargando reportes:', err);
+      setReportes([]);
+    } finally {
+      setLoadingReportes(false);
+    }
+  };
+
+  // Ciclar estado al clickear una tarjeta
+  const cycleEstado = (estado) => {
+    const order = ['Pendiente', 'En proceso', 'Completado'];
+    const idx = order.findIndex((s) => s.toLowerCase() === String(estado || '').toLowerCase());
+    const nextIdx = (idx === -1) ? 0 : (idx + 1) % order.length;
+    return order[nextIdx];
+  };
+
+  const handleToggleEstado = async (reporte) => {
+    const nextEstado = cycleEstado(reporte.estado);
+    try {
+      const updated = await reportStore.updateReport(reporte.id, { estado: nextEstado });
+      if (updated) {
+        setReportes((prev) => prev.map((r) => r.id === reporte.id ? { ...r, estado: nextEstado } : r));
+      }
+    } catch (err) {
+      console.error('Error al actualizar estado:', err);
+      alert('Error al actualizar el estado del reporte');
+    }
+  };
+
+  const calcRemainingMs = (createdAt) => {
+    const ttl = getTTLms();
+    return (createdAt || Date.now()) + ttl - nowMs;
+  };
+
+  const formatRemaining = (ms) => {
+    if (ms <= 0) return '00:00';
+    const totalSeconds = Math.floor(ms / 1000);
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    if (days > 0) return `${days}d ${hours}h`;
+    if (hours > 0) return `${hours}h ${minutes}m`;
+    const mm = String(minutes).padStart(2, '0');
+    const ss = String(seconds).padStart(2, '0');
+    return `${mm}:${ss}`;
+  };
+
   return (
     <div className="vista-admin">
       <Usuario />
@@ -172,7 +251,89 @@ function Vista_Admin() {
           </tbody>
         </table>
       )}
-      <Link to="/" className="link-inicio">Volver al inicio</Link>
+      {/* Sección de Reportes */}
+      <div className="admin-section" style={{ marginTop: '2rem' }}>
+        <h2>Todos los Reportes</h2>
+        <button 
+          className="btn-toggle-section"
+          onClick={() => setShowReportes(!showReportes)}
+          style={{ marginBottom: '1rem' }}
+        >
+          {showReportes ? 'Ocultar Reportes' : 'Ver Reportes'}
+        </button>
+        
+        {showReportes && (
+          <div className="reportes-section">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <p style={{ margin: 0, color: '#666' }}>
+                Total de reportes: <strong>{reportes.length}</strong>
+              </p>
+              <button 
+                className="btn-nuevo-reporte"
+                onClick={fetchReportes}
+                style={{ padding: '0.5rem 1rem' }}
+              >
+                 Refrescar
+              </button>
+            </div>
+            
+            {loadingReportes ? (
+              <p className="loading">Cargando reportes...</p>
+            ) : reportes.length === 0 ? (
+              <p style={{ textAlign: 'center', padding: '2rem', color: '#666' }}>
+                No hay reportes para mostrar
+              </p>
+            ) : (
+              <div className="reportes-grid">
+                {reportes.map((reporte) => (
+                  <div
+                    key={reporte.id}
+                    className={`reporte-card ${reporte.estado.toLowerCase().replace(' ', '-')}`}
+                    onClick={() => handleToggleEstado(reporte)}
+                    title="Click para cambiar estado (Solo admins)"
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <div className="reporte-header">
+                      <h4>{reporte.area}</h4>
+                      <span className={`estado-badge ${reporte.estado.toLowerCase().replace(' ', '-')}`}>
+                        {reporte.estado}
+                      </span>
+                    </div>
+                    <p className="problema">{reporte.problema}</p>
+                    {reporte.descripcion && (
+                      <p className="descripcion">{reporte.descripcion}</p>
+                    )}
+                    <div className="reporte-footer">
+                      <div>
+                        <span className="fecha"> {reporte.fecha}</span>
+                        <br />
+                        <span className="user-info" style={{ fontSize: '0.85rem', color: '#666' }}>
+                           {reporte.userName || 'Usuario'}
+                        </span>
+                        {reporte.userEmail && (
+                          <>
+                            <br />
+                            <span className="user-info" style={{ fontSize: '0.85rem', color: '#666' }}>
+                               {reporte.userEmail}
+                            </span>
+                          </>
+                        )}
+                      </div>
+                      <span className="ttl" style={{ marginTop: '0.5rem', color: '#555', fontWeight: 600 }}>
+                         Se elimina en: {formatRemaining(calcRemainingMs(reporte.createdAt))}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      <Link to="/" className="link-inicio" style={{ marginTop: '2rem', display: 'inline-block' }}>
+        Cerrar Sesión
+      </Link>
 
       {/* Modal para mostrar/editar/eliminar usuario */}
       {selectedUser && (
