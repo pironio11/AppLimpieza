@@ -44,11 +44,6 @@ function Vista_Usuario() {
     return () => clearInterval(timer);
   }, []);
 
-  // Redirigir si no hay usuario
-  if (!user) {
-    return <Navigate to="/" />;
-  }
-
   // Cargar reportes del usuario (memorizado para satisfacer reglas de hooks)
   const fetchReportes = useCallback(async () => {
     setLoading(true);
@@ -101,14 +96,7 @@ function Vista_Usuario() {
     }
   };
 
-  // Refresco automático según TTL (si TTL <= 60s, refrescar cada 2s; si no, cada 1h)
-  useEffect(() => {
-    const ttl = getTTLms();
-    const intervalMs = ttl <= 60 * 1000 ? 2000 : 60 * 60 * 1000;
-    const id = setInterval(fetchReportes, intervalMs);
-    return () => clearInterval(id);
-  }, [fetchReportes]);
-
+  // Guard de navegación debe ir después de los hooks
   if (!user) {
     return <Navigate to="/" />;
   }

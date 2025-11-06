@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { collection, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
@@ -49,19 +49,19 @@ function Vista_Admin() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [editData, setEditData] = useState({});
-  const { token } = getSession();
+  const { token } = obtenerSesion();
   const { user } = useAuth();
 
   // Cargar usuarios
   const cargarUsuarios = async () => {
-    setCargando(true);
+    setLoading(true);
     try {
       const data = await servicioUsuarios.list();
-      setUsuarios(data);
+      setUsers(data);
     } catch (err) {
-      setUsuarios([]);
+      setUsers([]);
     } finally {
-      setCargando(false);
+      setLoading(false);
     }
   };
 
@@ -71,24 +71,24 @@ function Vista_Admin() {
   }, [token]);
 
   // Redirigir si no hay usuario o no es admin
-  if (!usuario) {
+  if (!user) {
     return <Navigate to="/" />;
   }
 
-  if (usuario.role !== 'admin') {
+  if (!((user.role || '').toLowerCase() === 'admin' || (user.rol || '') === 'Admin')) {
     return <Navigate to="/usuario" />;
   }
 
   // Cerrar modal
   const cerrarModal = () => {
-    setUsuarioSeleccionado(null);
+    setSelectedUser(null);
   };
 
   // Eliminar usuario
   const eliminarUsuario = async () => {
     if (window.confirm('¿Seguro que quieres eliminar este usuario?')) {
       try {
-        await servicioUsuarios.delete({ id: usuarioSeleccionado.id });
+        await servicioUsuarios.delete({ id: selectedUser.id });
         cerrarModal();
         cargarUsuarios();
       } catch (err) {
@@ -175,18 +175,18 @@ function Vista_Admin() {
       <Link to="/" className="link-inicio">Volver al inicio</Link>
 
       {/* Modal para mostrar/editar/eliminar usuario */}
-      {usuarioSeleccionado && (
+      {selectedUser && (
         <div className="modal-overlay">
           <div className="modal-content">
             <h3>Perfil de Usuario</h3>
             <div>
               <div className="user-info">
-                <p><strong>Gmail:</strong> {usuarioSeleccionado.gmail || '-'}</p>
-                <p><strong>Nombre registrado:</strong> {usuarioSeleccionado.displayName || `${(usuarioSeleccionado.nombre || '')} ${(usuarioSeleccionado.apellido || '')}`.trim() || '-'}</p>
-                <p><strong>Nombre completo:</strong> {`${usuarioSeleccionado.nombre || ''} ${usuarioSeleccionado.apellido || ''}`.trim() || '-'}</p>
-                <p><strong>DNI:</strong> {usuarioSeleccionado.dni || '-'}</p>
-                <p><strong>Legajo:</strong> {usuarioSeleccionado.legajo || '-'}</p>
-                <p><strong>Rol:</strong> {usuarioSeleccionado.rol || (String(usuarioSeleccionado.role || '').toLowerCase() === 'admin' ? 'Admin' : 'Usuario')}</p>
+                <p><strong>Gmail:</strong> {selectedUser.gmail || '-'}</p>
+                <p><strong>Nombre registrado:</strong> {selectedUser.displayName || `${(selectedUser.nombre || '')} ${(selectedUser.apellido || '')}`.trim() || '-'}</p>
+                <p><strong>Nombre completo:</strong> {`${selectedUser.nombre || ''} ${selectedUser.apellido || ''}`.trim() || '-'}</p>
+                <p><strong>DNI:</strong> {selectedUser.dni || '-'}</p>
+                <p><strong>Legajo:</strong> {selectedUser.legajo || '-'}</p>
+                <p><strong>Rol:</strong> {selectedUser.rol || (String(selectedUser.role || '').toLowerCase() === 'admin' ? 'Admin' : 'Usuario')}</p>
               </div>
               <div className="modal-buttons">
                 <button className="btn-danger" onClick={eliminarUsuario}>Eliminar</button>
