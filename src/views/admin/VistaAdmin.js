@@ -21,15 +21,15 @@ function obtenerSesion() {
 
 const servicioUsuarios = {
   async list() {
-    const snap = await getDocs(collection(db, 'usuario'));
+    const snap = await getDocs(collection(db, 'usuarios'));
     return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
   },
   async update({ id, data }) {
-    await updateDoc(doc(db, 'usuario', id), data);
+    await updateDoc(doc(db, 'usuarios', id), data);
     return true;
   },
   async delete({ id }) {
-    await deleteDoc(doc(db, 'usuario', id));
+    await deleteDoc(doc(db, 'usuarios', id));
     return true;
   },
 };
@@ -307,7 +307,13 @@ function Vista_Admin() {
         )}
       </div>
 
+     
+    
+      <Link to="/" className="link-inicio" style={{ marginTop: '2rem', display: 'inline-block' }}>
+        Cerrar Sesión
+      </Link>
 
+      {/* Modal para mostrar/editar/eliminar usuario */}
       {selectedUser && (
         <div className="modal-overlay">
           <div className="modal-content">
