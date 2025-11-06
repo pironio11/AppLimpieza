@@ -4,72 +4,86 @@ import "./estilos/FRM.css";
 import logoepet from '../imagenes/logoepet.jpg';
 import epetfoto from '../imagenes/epetfoto.jpg';
 import googlefoto from '../imagenes/googleFoto.jpg';
-import { auth, googleProvider } from '../firebase/config';
-import { signInWithPopup } from 'firebase/auth';
+import { useAuth } from '../hooks/useAuthProvider';
+
 
 const FRMRegistre = () => {
   const navigate = useNavigate();
+  const { login, register, loginWithGoogle, error: authError, user } = useAuth();
   const [loginMode, setLoginMode] = useState(null);
-  const [legajo, setLegajo] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [displayName, setDisplayName] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [formError, setFormError] = useState(null);
 
-  const handleLogin = (tipoUsuario) => {
-    localStorage.setItem('auth.token', 'demo-token');
+  // Redirigir si el usuario ya está logueado
+  React.useEffect(() => {
+    if (user) {
+      if (user.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/usuario');
+      }
+    }
+  }, [user, navigate]);
 
-    if (tipoUsuario === 'admin') {
-      localStorage.setItem('auth.user', JSON.stringify({
-        id: 1,
-        nombre: 'Admin',
-        apellido: 'Sistema',
-        email: 'admin@limpieza.com',
-        rol: 'Admin'
-      }));
-      navigate('/admin');
-    } else {
-      localStorage.setItem('auth.user', JSON.stringify({
-        id: 2,
-        nombre: 'Usuario',
-        apellido: 'Normal',
-        email: 'usuario@limpieza.com',
-        rol: 'Usuario'
-      }));
-      navigate('/usuario');
+  const handleEmailLogin = async (e) => {
+    e.preventDefault();
+    setFormError(null);
+    setIsLoading(true);
+    
+    try {
+      const user = await login(email, password);
+      if (user.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/usuario');
+      }
+    } catch (err) {
+      setFormError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setFormError(null);
+    
+    // Validaciones
+    if (password !== confirmPassword) {
+      setFormError('Las contraseñas no coinciden');
+      return;
+    }
+    
+    if (password.length < 6) {
+      setFormError('La contraseña debe tener al menos 6 caracteres');
+      return;
+    }
+    
+    setIsLoading(true);
+    try {
+      const user = await register(email, password, displayName);
+      navigate(user.role === 'admin' ? '/admin' : '/usuario');
+    } catch (err) {
+      setFormError(err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleGoogleLogin = async () => {
+    setFormError(null);
+    setIsLoading(true);
     try {
-      console.log('Iniciando autenticación con Google...');
-      const result = await signInWithPopup(auth, googleProvider);
-      console.log('Resultado de autenticación:', result);
-      
-      const user = result.user;
-      console.log('Usuario autenticado:', user);
-      
-      // Obtener el token de autenticación
-      const token = await user.getIdToken();
-      console.log('Token de autenticación:', token);
-      
-      // Guardar token y usuario en localStorage
-      localStorage.setItem('auth.token', token);
-      localStorage.setItem('auth.user', JSON.stringify({
-        uid: user.uid,
-        nombre: user.displayName || 'Usuario',
-        email: user.email,
-        foto: user.photoURL,
-        rol: 'Usuario'
-      }));
-      
-      console.log('Redirigiendo a /usuario...');
-      navigate('/usuario');
-    } catch (error) {
-      console.error('Error en autenticación con Google:', error);
-      console.error('Código de error:', error.code);
-      console.error('Mensaje de error:', error.message);
-      alert(`Error al iniciar sesión con Google: ${error.message}`);
-      console.error('Error en login con Google:', error);
-      alert('No se pudo iniciar sesión con Google. Revisa la configuración de Firebase.');
+      const user = await loginWithGoogle();
+      navigate(user.role === 'admin' ? '/admin' : '/usuario');
+    } catch (err) {
+      setFormError(err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -106,38 +120,10 @@ const FRMRegistre = () => {
 
           <div className="login-forms">
             {loginMode === 'admin' ? (
-              <form onSubmit={(e) => { e.preventDefault(); handleLogin('admin'); }} className="login-form">
-                <h3 className="form-title">Ingreso Administrador</h3>
+              <form onSubmit={handleEmailLogin} className="login-form">
+                <h3 className="form-title">Iniciar sesión</h3>
                 <div className="form-group">
-                  <label htmlFor="legajo">N° de Legajo</label>
-                  <input
-                    type="text"
-                    id="legajo"
-                    className="form-control"
-                    value={legajo}
-                    onChange={(e) => setLegajo(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="password">Contraseña</label>
-                  <input
-                    type="password"
-                    id="password"
-                    className="form-control"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                </div>
-                <button type="submit" className="btn-primary btn-full">Ingresar</button>
-                <button type="button" onClick={() => setLoginMode(null)} className="btn-outline btn-full btn-back">Volver</button>
-              </form>
-            ) : loginMode === 'user' ? (
-              <form onSubmit={(e) => { e.preventDefault(); handleLogin('usuario'); }} className="login-form">
-                <h3 className="form-title">Ingreso Usuario</h3>
-                <div className="form-group">
-                  <label htmlFor="email">Gmail</label>
+                  <label htmlFor="email">Correo electrónico</label>
                   <input
                     type="email"
                     id="email"
@@ -145,6 +131,7 @@ const FRMRegistre = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
+                    autoComplete="email"
                   />
                 </div>
                 <div className="form-group">
@@ -156,16 +143,121 @@ const FRMRegistre = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    autoComplete="current-password"
                   />
                 </div>
-                <button type="submit" className="btn-primary btn-full">Ingresar</button>
-                <button type="button" onClick={() => setLoginMode(null)} className="btn-outline btn-full btn-back">Volver</button>
+                {(formError || authError) && (
+                  <div className="error" style={{color: 'red', marginBottom: '1rem'}}>
+                    {formError || authError}
+                  </div>
+                )}
+                <button 
+                  type="submit" 
+                  className="btn-primary btn-full"
+                  disabled={isLoading}
+                >
+                  {isLoading ? 'Iniciando sesión...' : 'Iniciar sesión'}
+                </button>
+
+                <button 
+                  type="button" 
+                  onClick={() => setLoginMode(null)} 
+                  className="btn-outline btn-full btn-back"
+                  disabled={isLoading}
+                >
+                  Volver
+                </button>
+
+                <div className="form-footer">
+                  <Link to="/reset-password" className="forgot-password">
+                    ¿Olvidaste tu contraseña?
+                  </Link>
+                </div>
+              </form>
+            ) : loginMode === 'user' ? (
+              <form onSubmit={handleRegister} className="login-form">
+                <h3 className="form-title">Registrarse</h3>
+                
+                <div className="form-group">
+                  <label htmlFor="displayName">Nombre completo</label>
+                  <input
+                    type="text"
+                    id="displayName"
+                    className="form-control"
+                    value={displayName}
+                    onChange={(e) => setDisplayName(e.target.value)}
+                    required
+                    minLength={3}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="email">Correo electrónico</label>
+                  <input
+                    type="email"
+                    id="email"
+                    className="form-control"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="password">Contraseña</label>
+                  <input
+                    type="password"
+                    id="password"
+                    className="form-control"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    minLength={6}
+                    title="Mínimo 6 caracteres"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="confirmPassword">Confirmar contraseña</label>
+                  <input
+                    type="password"
+                    id="confirmPassword"
+                    className="form-control"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                  />
+                </div>
+
+                {(formError || authError) && (
+                  <div className="error" style={{color: 'red', marginBottom: '1rem'}}>
+                    {formError || authError}
+                  </div>
+                )}
+
+                <button 
+                  type="submit" 
+                  className="btn-primary btn-full"
+                  disabled={isLoading}
+                >
+                  {isLoading ? 'Registrando...' : 'Registrarse'}
+                </button>
+
+                <button 
+                  type="button" 
+                  onClick={() => setLoginMode(null)} 
+                  className="btn-outline btn-full btn-back"
+                  disabled={isLoading}
+                >
+                  Volver
+                </button>
               </form>
             ) : (
               <div className="botones-login">
                 <div className="boton-admin">
                   <button className="btn-outline btn-full" onClick={() => setLoginMode('admin')}>
-                    Ingresar como Administrador
+                    Iniciar sesión
                   </button>
                 </div>
                 <div className="boton-usuario">
@@ -173,7 +265,7 @@ const FRMRegistre = () => {
                     onClick={() => setLoginMode('user')}
                     className="btn-usuario btn-full btn-outline"
                   >
-                    Ingresar como Usuario
+                    Registrarse
                   </button>
                 </div>
               </div>

@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import Usuario from '../../componentes/usuario';
 import './VistaUsuario.css';
 import { reportStore, getTTLms } from '../../utils/reportStore';
+import { useAuth } from '../../hooks/useAuthProvider';
 
 // INICIO SESIÓN 
 function getSession() {
@@ -32,14 +33,28 @@ function Vista_Usuario() {
     problema: '',
     descripcion: ''
   });
+  const [isLoading, setIsLoading] = useState(false);
   const [nowMs, setNowMs] = useState(Date.now());
   const { token, currentUser } = getSession();
+  const { user } = useAuth();
+
+  // Tick de 1s para actualizar visualmente los contadores de tiempo restante
+  useEffect(() => {
+    const timer = setInterval(() => setNowMs(Date.now()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Redirigir si no hay usuario
+  if (!user) {
+    return <Navigate to="/" />;
+  }
 
   // Cargar reportes del usuario (memorizado para satisfacer reglas de hooks)
   const fetchReportes = useCallback(async () => {
     setLoading(true);
     try {
-      const data = reportStore.loadReports();
+      // Cargar reportes filtrados por el usuario actual
+      const data = await reportStore.loadReports(user?.uid);
       setReportes(data.map(normalizeReporte));
     } catch (err) {
       console.warn('Error cargando reportes:', err);
@@ -47,27 +62,42 @@ function Vista_Usuario() {
     } finally {
       setLoading(false);
     }
-  }, [token]);
+  }, [user]);
 
   useEffect(() => {
     fetchReportes();
   }, [fetchReportes]);
 
+  // Refresco automático según TTL (si TTL <= 60s, refrescar cada 2s; si no, cada 1h)
+  useEffect(() => {
+    const ttl = getTTLms();
+    const intervalMs = ttl <= 60 * 1000 ? 2000 : 60 * 60 * 1000;
+    const id = setInterval(fetchReportes, intervalMs);
+    return () => clearInterval(id);
+  }, [fetchReportes]);
+
   // Crear nuevo reporte
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const payload = {
         ...newReporte,
+        userId: user.uid, // Agregar ID del usuario
+        userName: user.displayName || `${user.nombre} ${user.apellido}`.trim() || 'Usuario',
+        userEmail: user.gmail || user.email,
         estado: 'Pendiente',
         fecha: new Date().toISOString().split('T')[0],
       };
-      const creado = reportStore.addReport(payload);
+      const creado = await reportStore.addReport(payload);
       setReportes([normalizeReporte(creado), ...reportes]);
       setNewReporte({ area: '', problema: '', descripcion: '' });
       setShowForm(false);
     } catch (err) {
-      alert('Error al crear reporte');
+      console.error('Error al crear reporte:', err);
+      alert('Error al crear reporte. Por favor, intenta de nuevo.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -77,7 +107,11 @@ function Vista_Usuario() {
     const intervalMs = ttl <= 60 * 1000 ? 2000 : 60 * 60 * 1000;
     const id = setInterval(fetchReportes, intervalMs);
     return () => clearInterval(id);
-  }, []);
+  }, [fetchReportes]);
+
+  if (!user) {
+    return <Navigate to="/" />;
+  }
 
   const handleChange = (e) => {
     setNewReporte({ ...newReporte, [e.target.name]: e.target.value });
@@ -91,19 +125,12 @@ function Vista_Usuario() {
     return order[nextIdx];
   };
 
-  const handleToggleEstado = (reporte) => {
-    const nextEstado = cycleEstado(reporte.estado);
-    const updated = reportStore.updateReport(reporte.id, { estado: nextEstado });
-    if (updated) {
-      setReportes((prev) => prev.map((r) => r.id === reporte.id ? { ...r, estado: nextEstado } : r));
-    }
+  // Los usuarios normales no pueden cambiar el estado
+  // Esta función ya no se usa, el estado solo lo cambian los admins
+  const handleToggleEstado = async (reporte) => {
+    // Deshabilitado para usuarios normales
+    console.log('Los usuarios no pueden cambiar el estado del reporte');
   };
-
-  // Tick de 1s para actualizar visualmente los contadores de tiempo restante
-  useEffect(() => {
-    const timer = setInterval(() => setNowMs(Date.now()), 1000);
-    return () => clearInterval(timer);
-  }, []);
 
   const calcRemainingMs = (createdAt) => {
     const ttl = getTTLms();
@@ -191,8 +218,10 @@ function Vista_Usuario() {
             </div>
             
             <div className="form-buttons">
-              <button type="submit" className="btn-primary">Crear Reporte</button>
-              <button type="button" className="btn-cancel" onClick={() => setShowForm(false)}>
+              <button type="submit" className="btn-primary" disabled={isLoading}>
+                {isLoading ? 'Creando...' : 'Crear Reporte'}
+              </button>
+              <button type="button" className="btn-cancel" onClick={() => setShowForm(false)} disabled={isLoading}>
                 Cancelar
               </button>
             </div>
@@ -211,9 +240,7 @@ function Vista_Usuario() {
               <div
                 key={reporte.id}
                 className={`reporte-card ${reporte.estado.toLowerCase().replace(' ', '-')}`}
-                onClick={() => handleToggleEstado(reporte)}
-                title="Click para cambiar estado"
-                style={{ cursor: 'pointer' }}
+                style={{ cursor: 'default' }}
               >
                 <div className="reporte-header">
                   <h4>{reporte.area}</h4>

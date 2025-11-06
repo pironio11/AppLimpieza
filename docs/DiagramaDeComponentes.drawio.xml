@@ -1,0 +1,96 @@
+<mxfile host="app.diagrams.net" modified="2025-10-27T00:00:00.000Z" agent="GPT-5" version="24.7.8" type="device">
+  <diagram id="index-app" name="Arquitectura Proyecto">
+    <mxGraphModel dx="1470" dy="820" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- INDEX.JS -->
+        <mxCell id="index" value="INDEX.JS&#10;(Punto de Entrada)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="400" y="60" width="300" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- Conexión hacia APP.JS -->
+        <mxCell id="edge1" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;html=1;strokeColor=#6c8ebf" edge="1" parent="1" source="index" target="app">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- APP.JS -->
+        <mxCell id="app" value="APP.JS&#10;(Componente Raíz / Router)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="400" y="180" width="300" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- CONTEXTS -->
+        <mxCell id="contexts" value="CONTEXTS/&#10;(ThemeContext)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12" vertex="1" parent="1">
+          <mxGeometry x="150" y="300" width="200" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- FIREBASE CONFIG -->
+        <mxCell id="firebase" value="FIREBASE/CONFIG.JS&#10;(Conexión Auth &amp; Firestore)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12" vertex="1" parent="1">
+          <mxGeometry x="400" y="300" width="300" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Flechas desde APP -->
+        <mxCell id="edge2" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;html=1;strokeColor=#d6b656" edge="1" parent="1" source="app" target="contexts">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge3" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;html=1;strokeColor=#d6b656" edge="1" parent="1" source="app" target="firebase">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- VISTAS / ROUTING -->
+        <mxCell id="vistas" value="VISTAS / ROUTING" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="400" y="400" width="300" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Flecha desde FIREBASE hacia VISTAS -->
+        <mxCell id="edge4" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;html=1;strokeColor=#82b366" edge="1" parent="1" source="firebase" target="vistas">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- VIEWS/ADMIN -->
+        <mxCell id="admin" value="VIEWS/ADMIN/&#10;(VistaAdmin.jsx)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12" vertex="1" parent="1">
+          <mxGeometry x="100" y="520" width="200" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- VIEWS/USUARIO -->
+        <mxCell id="usuario" value="VIEWS/USUARIO/&#10;(VistaUsuario.jsx)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12" vertex="1" parent="1">
+          <mxGeometry x="400" y="520" width="200" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- VIEWS/LOGIN -->
+        <mxCell id="login" value="VIEWS/LOGIN&#10;(FRMRegistre)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12" vertex="1" parent="1">
+          <mxGeometry x="700" y="520" width="200" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Flechas de vistas -->
+        <mxCell id="edge5" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;html=1;strokeColor=#82b366" edge="1" parent="1" source="vistas" target="admin">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge6" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;html=1;strokeColor=#82b366" edge="1" parent="1" source="vistas" target="usuario">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge7" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;html=1;strokeColor=#82b366" edge="1" parent="1" source="vistas" target="login">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- COMPONENTES -->
+        <mxCell id="componentes" value="COMPONENTES/&#10;(Navbar, Footer, ThemeToggle, Tareas, Reportes)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#4a86e8;fontSize=12" vertex="1" parent="1">
+          <mxGeometry x="400" y="640" width="300" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- Conexiones hacia componentes -->
+        <mxCell id="edge8" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;html=1;strokeColor=#4a86e8" edge="1" parent="1" source="admin" target="componentes">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge9" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;html=1;strokeColor=#4a86e8" edge="1" parent="1" source="usuario" target="componentes">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge10" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;html=1;strokeColor=#4a86e8" edge="1" parent="1" source="login" target="componentes">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
