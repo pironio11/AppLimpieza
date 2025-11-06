@@ -75,21 +75,21 @@
 
 /* Botón Ver perfil */
 .btn-ver-perfil {
-  background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 20px;
+  background: transparent;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  padding: 8px 14px;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 500;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(116, 185, 255, 0.3);
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  box-shadow: none;
 }
 
 .btn-ver-perfil:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(116, 185, 255, 0.4);
+  background-color: var(--primary);
+  color: #fff;
 }
 
 /* Link volver al inicio */
@@ -242,71 +242,87 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 25px;
+  background: var(--primary);
+  color: #fff;
+  border: 1px solid var(--primary);
+  padding: 10px 18px;
+  border-radius: 6px;
   cursor: pointer;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 184, 148, 0.3);
+  font-weight: 600;
+  transition: opacity 0.2s ease;
+  box-shadow: none;
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 184, 148, 0.4);
+  opacity: 0.9;
 }
 
 .btn-secondary {
-  background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 25px;
+  background: transparent;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  padding: 10px 18px;
+  border-radius: 6px;
   cursor: pointer;
   font-weight: 500;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(116, 185, 255, 0.3);
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  box-shadow: none;
 }
 
 .btn-secondary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(116, 185, 255, 0.4);
+  background-color: var(--primary);
+  color: #fff;
 }
 
 .btn-danger {
-  background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 25px;
+  background: #d63031;
+  color: #fff;
+  border: 1px solid #d63031;
+  padding: 10px 18px;
+  border-radius: 6px;
   cursor: pointer;
   font-weight: 500;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(253, 121, 168, 0.3);
+  transition: opacity 0.2s ease;
+  box-shadow: none;
 }
 
 .btn-danger:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(253, 121, 168, 0.4);
+  opacity: 0.9;
+}
+
+/* Botón peligro solo al hover (para 'Dar de baja') */
+.btn-peligro-suave {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  box-shadow: none;
+}
+
+.btn-peligro-suave:hover {
+  background: #d63031;
+  color: #fff;
+  border-color: #d63031;
 }
 
 .btn-cancel {
-  background: linear-gradient(135deg, #636e72 0%, #2d3436 100%);
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 25px;
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 10px 18px;
+  border-radius: 6px;
   cursor: pointer;
   font-weight: 500;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(99, 110, 114, 0.3);
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  box-shadow: none;
 }
 
 .btn-cancel:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(99, 110, 114, 0.4);
+  background-color: var(--surface-hover);
 }
 
 /* Responsive design */
