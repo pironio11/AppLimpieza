@@ -33,6 +33,7 @@ function Vista_Usuario() {
     problema: '',
     descripcion: ''
   });
+  const [isLoading, setIsLoading] = useState(false);
   const [nowMs, setNowMs] = useState(Date.now());
   const { token, currentUser } = getSession();
   const { user } = useAuth();
@@ -52,7 +53,8 @@ function Vista_Usuario() {
   const fetchReportes = useCallback(async () => {
     setLoading(true);
     try {
-      const data = reportStore.loadReports();
+      // Cargar reportes filtrados por el usuario actual
+      const data = await reportStore.loadReports(user?.uid);
       setReportes(data.map(normalizeReporte));
     } catch (err) {
       console.warn('Error cargando reportes:', err);
@@ -60,7 +62,7 @@ function Vista_Usuario() {
     } finally {
       setLoading(false);
     }
-  }, [token]);
+  }, [user]);
 
   useEffect(() => {
     fetchReportes();
@@ -75,20 +77,27 @@ function Vista_Usuario() {
   }, [fetchReportes]);
 
   // Crear nuevo reporte
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const payload = {
         ...newReporte,
+        userId: user.uid, // Agregar ID del usuario
+        userName: user.displayName || `${user.nombre} ${user.apellido}`.trim() || 'Usuario',
+        userEmail: user.gmail || user.email,
         estado: 'Pendiente',
         fecha: new Date().toISOString().split('T')[0],
       };
-      const creado = reportStore.addReport(payload);
+      const creado = await reportStore.addReport(payload);
       setReportes([normalizeReporte(creado), ...reportes]);
       setNewReporte({ area: '', problema: '', descripcion: '' });
       setShowForm(false);
     } catch (err) {
-      alert('Error al crear reporte');
+      console.error('Error al crear reporte:', err);
+      alert('Error al crear reporte. Por favor, intenta de nuevo.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -116,11 +125,15 @@ function Vista_Usuario() {
     return order[nextIdx];
   };
 
-  const handleToggleEstado = (reporte) => {
+  const handleToggleEstado = async (reporte) => {
     const nextEstado = cycleEstado(reporte.estado);
-    const updated = reportStore.updateReport(reporte.id, { estado: nextEstado });
-    if (updated) {
-      setReportes((prev) => prev.map((r) => r.id === reporte.id ? { ...r, estado: nextEstado } : r));
+    try {
+      const updated = await reportStore.updateReport(reporte.id, { estado: nextEstado });
+      if (updated) {
+        setReportes((prev) => prev.map((r) => r.id === reporte.id ? { ...r, estado: nextEstado } : r));
+      }
+    } catch (err) {
+      console.error('Error al actualizar estado:', err);
     }
   };
 
@@ -210,8 +223,10 @@ function Vista_Usuario() {
             </div>
             
             <div className="form-buttons">
-              <button type="submit" className="btn-primary">Crear Reporte</button>
-              <button type="button" className="btn-cancel" onClick={() => setShowForm(false)}>
+              <button type="submit" className="btn-primary" disabled={isLoading}>
+                {isLoading ? 'Creando...' : 'Crear Reporte'}
+              </button>
+              <button type="button" className="btn-cancel" onClick={() => setShowForm(false)} disabled={isLoading}>
                 Cancelar
               </button>
             </div>
