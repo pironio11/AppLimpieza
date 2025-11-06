@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { collection, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import Usuario from '../../componentes/usuario';
 import './VistaAdmin.css';
 import { useAuth } from '../../hooks/useAuthProvider';
+import { reportStore, getTTLms } from '../../utils/reportStore';
+import '../usuario/VistaUsuario.css';
 
 // INICIO SESIÓN 
 function obtenerSesion() {
@@ -34,11 +36,21 @@ const servicioUsuarios = {
   },
 };
 
+// Normalizador para mostrar fecha/estado aunque no vengan
+function normalizeReporte(r) {
+  const fecha = r.fecha || new Date(r.createdAt || Date.now()).toISOString().split('T')[0];
+  const estado = r.estado || 'Pendiente';
+  return { ...r, fecha, estado };
+}
+
 function Vista_Admin() {
-  const [usuarios, setUsuarios] = useState([]);
-  const [cargando, setCargando] = useState(true);
-  const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
-  const { user: usuario } = useAuth();
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [editMode, setEditMode] = useState(false);
+  const [editData, setEditData] = useState({});
+  const { token } = getSession();
+  const { user } = useAuth();
 
   // Cargar usuarios
   const cargarUsuarios = async () => {
@@ -56,7 +68,7 @@ function Vista_Admin() {
   useEffect(() => {
     cargarUsuarios();
     // eslint-disable-next-line
-  }, [usuario]);
+  }, [token]);
 
   // Redirigir si no hay usuario o no es admin
   if (!usuario) {
@@ -113,13 +125,16 @@ function Vista_Admin() {
     }
   };
 
-  
+  // Manejar cambios en el formulario de edición
+  const handleChange = (e) => {
+    setEditData({ ...editData, [e.target.name]: e.target.value });
+  };
 
   return (
     <div className="vista-admin">
       <Usuario />
       <h2>Lista de Usuarios</h2>
-      {cargando ? (
+      {loading ? (
         <p className="loading">Cargando...</p>
       ) : (
         <table className="users-table">
@@ -137,25 +152,19 @@ function Vista_Admin() {
             </tr>
           </thead>
           <tbody>
-            {usuarios.map((u) => (
+            {users.map((u) => (
               <tr key={u.id}>
                 <td>{u.id}</td>
                 <td>{u.nombre}</td>
                 <td>{u.apellido}</td>
                 <td>{u.dni}</td>
                 <td>{u.email}</td>
-                <td>{u.rol || (String(u.role || '').toLowerCase() === 'admin' ? 'Admin' : 'Usuario')}</td>
-                <td>{u.estado} {String(u.estado || '').toLowerCase() === 'conectado' ? '🟢' : '🔴'}</td>
+                <td>{u.rol}</td>
+                <td>{u.estado}</td>
                 <td>{u.ultimaAccion}</td>
                 <td>
-                  <button className="btn-ver-perfil" onClick={() => setUsuarioSeleccionado(u)}>
+                  <button className="btn-ver-perfil" onClick={() => setSelectedUser(u)}>
                     Ver perfil
-                  </button>
-                  <button className="btn-secondary" onClick={() => alternarRol(u)} style={{ marginLeft: 8 }}>
-                    {(u.rol || (String(u.role || '').toLowerCase() === 'admin' ? 'Admin' : 'Usuario')) === 'Admin' ? 'Quitar administrador' : 'Asignar administrador'}
-                  </button>
-                  <button className="btn-peligro-suave" onClick={() => alternarBaja(u)} style={{ marginLeft: 8 }}>
-                    {String(u.estado || '').toLowerCase() === 'baja' ? 'Activar' : 'Dar de baja'}
                   </button>
                 </td>
               </tr>

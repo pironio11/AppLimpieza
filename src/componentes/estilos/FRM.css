@@ -438,7 +438,7 @@ button:focus-visible {
   height: 44px;
   padding: 0 12px;
   border-radius: 10px;
-  border: 1px solid var(--border);
+  border: 1px solid black;
   background: var(--bg);
   color: var(--text);
   font-size: 1rem;
@@ -447,7 +447,7 @@ button:focus-visible {
 
 .form-control:focus {
   outline: none;
-  border-color: var(--primary);
+  border-color: black;
   box-shadow: 0 0 0 3px var(--ring);
 }
 
