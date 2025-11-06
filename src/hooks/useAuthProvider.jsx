@@ -9,7 +9,7 @@ import {
   updateProfile,
   GoogleAuthProvider
 } from 'firebase/auth';
-import { doc, setDoc, getDoc, collection, getDocs } from 'firebase/firestore';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase/config';
 
 // Crear contexto para el estado de autenticación
@@ -17,7 +17,11 @@ const AuthContext = createContext();
 
 // Hook personalizado para usar el contexto
 export const useAuth = () => {
-  return useContext(AuthContext);
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth debe usarse dentro de AuthProvider');
+  }
+  return context;
 };
 
 // Proveedor de autenticación
@@ -32,7 +36,7 @@ export const AuthProvider = ({ children }) => {
       if (user) {
         try {
           // Obtener datos adicionales del usuario desde Firestore
-          const userDoc = await getDoc(doc(db, 'usuario', user.uid));
+          const userDoc = await getDoc(doc(db, 'usuarios', user.uid));
           const userData = userDoc.exists() ? userDoc.data() : {};
           
           setUser({
@@ -41,7 +45,7 @@ export const AuthProvider = ({ children }) => {
             apellido: userData.apellido || '',
             gmail: userData.gmail || user.email,
             role: userData.role || 'usuario',
-            displayName: `${userData.nombre || ''} ${userData.apellido || ''}`.trim()
+            displayName: `${userData.nombre || ''} ${userData.apellido || ''}`.trim() || user.displayName || ''
           });
           
           console.log('✅ Datos de usuario cargados correctamente');
@@ -75,16 +79,19 @@ export const AuthProvider = ({ children }) => {
       // Crear usuario en Authentication
       const { user } = await createUserWithEmailAndPassword(auth, email, password);
       
-      // Extraer nombre y apellido del displayName
-      const [nombre = '', apellido = ''] = displayName.split(' ');
+      // Extraer nombre y apellido del displayName (mejor manejo)
+      const nameParts = displayName.trim().split(' ');
+      const nombre = nameParts[0] || '';
+      const apellido = nameParts.slice(1).join(' ') || '';
 
       // Crear perfil en Firestore con rol por defecto 'usuario'
-      await setDoc(doc(db, 'usuario', user.uid), {
+      await setDoc(doc(db, 'usuarios', user.uid), {
         nombre: nombre,
         apellido: apellido,
         gmail: user.email,
-        role: 'usuario', // Por defecto todos son usuarios normales
-        authProvider: 'email'
+        role: 'usuario',
+        authProvider: 'email',
+        createdAt: new Date().toISOString()
       });
 
       // Actualizar perfil en Auth
@@ -93,7 +100,8 @@ export const AuthProvider = ({ children }) => {
       console.log('✅ Usuario registrado exitosamente como usuario');
       return { ...user, role: 'usuario' };
     } catch (error) {
-      setError(formatAuthError(error));
+      const errorMsg = formatAuthError(error);
+      setError(errorMsg);
       throw error;
     }
   };
@@ -110,20 +118,24 @@ export const AuthProvider = ({ children }) => {
       
       try {
         // Verificar datos en Firestore
-        const userDoc = await getDoc(doc(db, 'usuario', user.uid));
+        const userDoc = await getDoc(doc(db, 'usuarios', user.uid));
         
         if (!userDoc.exists()) {
           console.log('📝 Creando perfil de usuario en Firestore...');
           // Si el usuario no existe en Firestore, créalo como usuario normal
-          const [nombre = '', apellido = ''] = (user.displayName || '').split(' ');
+          const nameParts = (user.displayName || '').trim().split(' ');
+          const nombre = nameParts[0] || '';
+          const apellido = nameParts.slice(1).join(' ') || '';
+          
           const userData = {
             nombre: nombre,
             apellido: apellido,
             gmail: user.email,
             role: 'usuario',
-            authProvider: 'email'
+            authProvider: 'email',
+            createdAt: new Date().toISOString()
           };
-          await setDoc(doc(db, 'usuario', user.uid), userData);
+          await setDoc(doc(db, 'usuarios', user.uid), userData);
           console.log('✅ Perfil creado exitosamente');
           return { ...user, ...userData };
         } else {
@@ -137,7 +149,8 @@ export const AuthProvider = ({ children }) => {
         return { ...user, role: 'usuario' };
       }
     } catch (error) {
-      setError(formatAuthError(error));
+      const errorMsg = formatAuthError(error);
+      setError(errorMsg);
       throw error;
     }
   };
@@ -148,7 +161,7 @@ export const AuthProvider = ({ children }) => {
       setError(null);
       const provider = new GoogleAuthProvider();
       provider.setCustomParameters({
-        prompt: 'select_account' // Siempre mostrar selector de cuentas
+        prompt: 'select_account'
       });
       
       console.log('🔄 Iniciando autenticación con Google...');
@@ -156,23 +169,26 @@ export const AuthProvider = ({ children }) => {
       console.log('✅ Autenticación con Google exitosa');
 
       // Verificar/crear perfil en Firestore
-      const userDoc = await getDoc(doc(db, 'usuario', user.uid));
+      const userDoc = await getDoc(doc(db, 'usuarios', user.uid));
       
       if (!userDoc.exists()) {
         console.log('📝 Creando nuevo perfil de usuario...');
 
         // Extraer nombre y apellido del displayName de Google
-        const [nombre = '', apellido = ''] = (user.displayName || '').split(' ');
+        const nameParts = (user.displayName || '').trim().split(' ');
+        const nombre = nameParts[0] || '';
+        const apellido = nameParts.slice(1).join(' ') || '';
         
         const userData = {
           nombre: nombre,
           apellido: apellido,
           gmail: user.email,
-          role: 'usuario', // Por defecto todos son usuarios normales
-          authProvider: 'google'
+          role: 'usuario',
+          authProvider: 'google',
+          createdAt: new Date().toISOString()
         };
         
-        await setDoc(doc(db, 'usuario', user.uid), userData);
+        await setDoc(doc(db, 'usuarios', user.uid), userData);
         console.log('✅ Perfil creado como usuario');
         return { ...user, ...userData };
       } else {
@@ -181,7 +197,8 @@ export const AuthProvider = ({ children }) => {
         return { ...user, ...userData };
       }
     } catch (error) {
-      setError(formatAuthError(error));
+      const errorMsg = formatAuthError(error);
+      setError(errorMsg);
       throw error;
     }
   };
@@ -190,8 +207,12 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       await signOut(auth);
+      setUser(null);
+      setError(null);
+      console.log('✅ Sesión cerrada correctamente');
     } catch (error) {
-      setError(formatAuthError(error));
+      const errorMsg = formatAuthError(error);
+      setError(errorMsg);
       throw error;
     }
   };
@@ -199,16 +220,22 @@ export const AuthProvider = ({ children }) => {
   // Recuperar contraseña
   const resetPassword = async (email) => {
     try {
+      setError(null);
       await sendPasswordResetEmail(auth, email);
+      console.log('✅ Email de recuperación enviado');
     } catch (error) {
-      setError(formatAuthError(error));
+      const errorMsg = formatAuthError(error);
+      setError(errorMsg);
       throw error;
     }
   };
 
+  // Limpiar error manualmente
+  const clearError = () => setError(null);
+
   // Formatear mensajes de error
   const formatAuthError = (error) => {
-    console.error('Error detallado:', error);
+    console.error('❌ Error detallado:', error);
     
     const errorMessages = {
       // Errores de autenticación básicos
@@ -216,10 +243,10 @@ export const AuthProvider = ({ children }) => {
       'auth/user-disabled': 'Esta cuenta ha sido deshabilitada',
       'auth/user-not-found': 'No existe una cuenta con este correo',
       'auth/wrong-password': 'Contraseña incorrecta',
-      'auth/invalid-credential': 'Credenciales inválidas',
+      'auth/invalid-credential': 'Credenciales inválidas. Verifica tu correo y contraseña',
       'auth/email-already-in-use': 'Este correo ya está registrado',
       'auth/operation-not-allowed': 'Operación no permitida',
-      'auth/weak-password': 'La contraseña es demasiado débil',
+      'auth/weak-password': 'La contraseña debe tener al menos 6 caracteres',
       
       // Errores de red y timeout
       'auth/network-request-failed': 'Error de conexión. Verifica tu internet',
@@ -231,32 +258,24 @@ export const AuthProvider = ({ children }) => {
       'insufficient-permissions': 'Permisos insuficientes',
       
       // Errores específicos de Google Sign-In
-      'auth/popup-closed-by-user': 'Ventana de Google cerrada antes de completar el login',
-      'auth/popup-blocked': 'El navegador bloqueó la ventana de Google. Permite ventanas emergentes e intenta de nuevo',
-      'auth/cancelled-popup-request': 'Operación cancelada. Intenta de nuevo',
-      'auth/account-exists-with-different-credential': 'Ya existe una cuenta con este email pero usando otro método de login',
-      
-      // Errores de red
-      'auth/network-request-failed': 'Error de conexión. Verifica tu internet e intenta de nuevo',
-      
-      // Errores de timeout
-      'auth/timeout': 'La operación expiró. Intenta de nuevo',
-      
-      // Errores de permisos
-      'permission-denied': 'No tienes permiso para realizar esta acción',
+      'auth/popup-closed-by-user': 'Ventana cerrada. Intenta de nuevo',
+      'auth/popup-blocked': 'El navegador bloqueó la ventana emergente. Permite ventanas emergentes',
+      'auth/cancelled-popup-request': 'Operación cancelada',
+      'auth/account-exists-with-different-credential': 'Ya existe una cuenta con este email usando otro método',
       
       // Errores de Firestore
-      'firestore/unavailable': 'Error al conectar con la base de datos. Intenta más tarde',
-      'firestore/data-loss': 'Error al guardar los datos. Intenta de nuevo'
+      'firestore/unavailable': 'Error al conectar con la base de datos',
+      'firestore/data-loss': 'Error al guardar los datos'
     };
 
-    return errorMessages[error.code] || 'Error de autenticación';
+    return errorMessages[error.code] || `Error: ${error.message || 'Error desconocido'}`;
   };
 
   const value = {
     user,
     loading,
     error,
+    clearError,
     register,
     login,
     loginWithGoogle,

@@ -1,93 +1,52 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signOut, onAuthStateChanged } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
-import { auth, db } from '../firebase/config';
+import { useAuth } from '../hooks/useAuthProvider';
 import './estilos/usuario.css';
 
 const Usuario = () => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { user, logout, loading } = useAuth();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
+  // Redirigir si no hay usuario (después del logout)
   useEffect(() => {
-    if (!auth || !db) {
-      setLoading(false);
-      return;
+    if (!loading && !user) {
+      navigate('/');
     }
-
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      if (currentUser) {
-        const userDoc = await getDoc(doc(db, 'usuarios', currentUser.uid));
-        if (userDoc.exists()) {
-          setUser({
-            uid: currentUser.uid,
-            email: currentUser.email,
-            ...userDoc.data(),
-          });
-        } else {
-          setUser({
-            uid: currentUser.uid,
-            email: currentUser.email,
-            nombre: currentUser.displayName || 'Usuario',
-            rol: 'usuario',
-          });
-        }
-      } else {
-        setUser(null);
-      }
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, []);
+  }, [user, loading, navigate]);
 
   const handleLogout = async () => {
     try {
-      await signOut(auth);
-      localStorage.removeItem('auth.token');
-      localStorage.removeItem('auth.user');
-      navigate('/');
+      setIsLoggingOut(true);
+      await logout();
+      // No navegues aquí, el useEffect de arriba lo hará
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
+      setIsLoggingOut(false);
     }
   };
 
-  if (loading) {
+  if (loading || isLoggingOut) {
     return (
       <div className="loading-container">
         <div className="loader"></div>
-        <p>Cargando información del usuario...</p>
+        <p>{isLoggingOut ? 'Cerrando sesión...' : 'Cargando información del usuario...'}</p>
       </div>
     );
   }
   
   if (!user) {
-    return (
-      <div className="usuario-component">
-        <div className="usuario-container">
-          <h1 className="usuario-title">No has iniciado sesión</h1>
-          <div className="usuario-card">
-            <p>Por favor, inicia sesión para ver tu información.</p>
-            <div className="usuario-button-container">
-              <button className="usuario-button" onClick={() => navigate('/')} >
-                Ir a inicio
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return null; // El useEffect redirigirá
   }
 
   return (
     <div className="usuario-component">
       <div className="usuario-container">
-        <h1 className="usuario-title">Bienvenido, {user.nombre || 'Usuario'}</h1>
+        <h1 className="usuario-title">Bienvenido, {user.nombre || user.displayName || 'Usuario'}</h1>
 
         <div className="usuario-card">
-          <p><strong>Email:</strong> {user.email}</p>
-          {user.rol && <p><strong>Rol:</strong> {user.rol}</p>}
+          <p><strong>Email:</strong> {user.gmail || user.email}</p>
+          {user.role && <p><strong>Rol:</strong> {user.role}</p>}
           {user.dni && <p><strong>DNI:</strong> {user.dni}</p>}
           {user.telefono && <p><strong>Teléfono:</strong> {user.telefono}</p>}
         </div>
@@ -100,8 +59,12 @@ const Usuario = () => {
         </div>
 
         <div className="usuario-button-container">
-          <button className="usuario-button" onClick={handleLogout}>
-            Cerrar sesión
+          <button 
+            className="usuario-button" 
+            onClick={handleLogout}
+            disabled={isLoggingOut}
+          >
+            {isLoggingOut ? 'Cerrando sesión...' : 'Cerrar sesión'}
           </button>
         </div>
       </div>
