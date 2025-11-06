@@ -330,6 +330,8 @@ function Vista_Admin() {
           </div>
         )}
       </div>
+
+     
     
       <Link to="/" className="link-inicio" style={{ marginTop: '2rem', display: 'inline-block' }}>
         Cerrar Sesión

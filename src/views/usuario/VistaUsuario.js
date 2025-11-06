@@ -252,7 +252,7 @@ function Vista_Usuario() {
         )}
       </div>
 
-      <Link to="/" className="link-inicio">Cerrar Sesión</Link>
+     
     </div>
   );
 }
