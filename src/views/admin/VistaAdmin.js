@@ -61,15 +61,6 @@ function Vista_Admin() {
   const { token } = getSession();
   const { user } = useAuth();
 
-  // Redirigir si no hay usuario o no es admin
-  if (!user) {
-    return <Navigate to="/" />;
-  }
-
-  if (user.role !== 'admin') {
-    return <Navigate to="/usuario" />;
-  }
-
   // Cargar usuarios
   const fetchUsers = async () => {
     setLoading(true);
@@ -87,6 +78,15 @@ function Vista_Admin() {
     fetchUsers();
     // eslint-disable-next-line
   }, [token]);
+
+  // Redirigir si no hay usuario o no es admin
+  if (!user) {
+    return <Navigate to="/" />;
+  }
+
+  if (user.role !== 'admin') {
+    return <Navigate to="/usuario" />;
+  }
 
   // Cerrar modal
   const closeModal = () => {
