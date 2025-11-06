@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import "./estilos/FRM.css";
-import logoepet from '../imagenes/logoepet.jpg';
-import epetfoto from '../imagenes/epetfoto.jpg';
-import googlefoto from '../imagenes/googleFoto.jpg';
+const logoepet = 'https://via.placeholder.com/300x168?text=EPET20';
+const epetfoto = 'https://via.placeholder.com/800x600?text=EPET+Foto';
+const googlefoto = 'https://developers.google.com/identity/images/g-logo.png';
 import { useAuth } from '../hooks/useAuthProvider';
 
 
