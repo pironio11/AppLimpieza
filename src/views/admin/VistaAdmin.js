@@ -8,7 +8,6 @@ import { useAuth } from '../../hooks/useAuthProvider';
 import { reportStore, getTTLms } from '../../utils/reportStore';
 import '../usuario/VistaUsuario.css';
 
-// INICIO SESIÓN 
 function obtenerSesion() {
   try {
     const token = localStorage.getItem('auth.token');
@@ -20,7 +19,6 @@ function obtenerSesion() {
   }
 }
 
-// API 
 const servicioUsuarios = {
   async list() {
     const snap = await getDocs(collection(db, 'usuario'));
@@ -36,7 +34,6 @@ const servicioUsuarios = {
   },
 };
 
-// Normalizador para mostrar fecha/estado aunque no vengan
 function normalizeReporte(r) {
   const fecha = r.fecha || new Date(r.createdAt || Date.now()).toISOString().split('T')[0];
   const estado = r.estado || 'Pendiente';
@@ -52,13 +49,11 @@ function Vista_Admin() {
   const { token } = obtenerSesion();
   const { user } = useAuth();
   
-  // Estados para reportes
   const [reportes, setReportes] = useState([]);
   const [loadingReportes, setLoadingReportes] = useState(true);
   const [nowMs, setNowMs] = useState(Date.now());
   const [showReportes, setShowReportes] = useState(true);
 
-  // Cargar usuarios
   const cargarUsuarios = async () => {
     setLoading(true);
     try {
@@ -73,21 +68,17 @@ function Vista_Admin() {
 
   useEffect(() => {
     cargarUsuarios();
-    // eslint-disable-next-line
   }, [token]);
 
-  // Cargar reportes inicialmente
   useEffect(() => {
     fetchReportes();
   }, []);
 
-  // Actualizar el contador de tiempo restante cada segundo
   useEffect(() => {
     const timer = setInterval(() => setNowMs(Date.now()), 1000);
     return () => clearInterval(timer);
   }, []);
 
-  // Refresco automático de reportes
   useEffect(() => {
     const ttl = getTTLms();
     const intervalMs = ttl <= 60 * 1000 ? 2000 : 60 * 60 * 1000;
@@ -95,7 +86,6 @@ function Vista_Admin() {
     return () => clearInterval(id);
   }, []);
 
-  // Redirigir si no hay usuario o no es admin
   if (!user) {
     return <Navigate to="/" />;
   }
@@ -104,12 +94,10 @@ function Vista_Admin() {
     return <Navigate to="/usuario" />;
   }
 
-  // Cerrar modal
   const cerrarModal = () => {
     setSelectedUser(null);
   };
 
-  // Eliminar usuario
   const eliminarUsuario = async () => {
     if (window.confirm('¿Seguro que quieres eliminar este usuario?')) {
       try {
@@ -122,11 +110,6 @@ function Vista_Admin() {
     }
   };
 
-  // (Sin edición en modal)
-
-  
-
-  // Cambiar rol entre Admin/Usuario
   const alternarRol = async (u) => {
     const actual = u.rol || (String(u.role || '').toLowerCase() === 'admin' ? 'Admin' : 'Usuario');
     const nuevoRol = actual === 'Admin' ? 'Usuario' : 'Admin';
@@ -138,7 +121,6 @@ function Vista_Admin() {
     }
   };
 
-  // Dar de baja o activar (usa campo 'estado')
   const alternarBaja = async (u) => {
     const estadoActual = String(u.estado || '').toLowerCase();
     const nuevoEstado = estadoActual === 'baja' ? 'Activo' : 'Baja';
@@ -150,26 +132,22 @@ function Vista_Admin() {
     }
   };
 
-  // Manejar cambios en el formulario de edición
   const handleChange = (e) => {
     setEditData({ ...editData, [e.target.name]: e.target.value });
   };
 
-  // Funciones para gestión de reportes
   const fetchReportes = async () => {
     setLoadingReportes(true);
     try {
       const data = await reportStore.loadReports();
       setReportes(data.map(normalizeReporte));
     } catch (err) {
-      console.warn('Error cargando reportes:', err);
       setReportes([]);
     } finally {
       setLoadingReportes(false);
     }
   };
 
-  // Ciclar estado al clickear una tarjeta
   const cycleEstado = (estado) => {
     const order = ['Pendiente', 'En proceso', 'Completado'];
     const idx = order.findIndex((s) => s.toLowerCase() === String(estado || '').toLowerCase());
@@ -185,7 +163,6 @@ function Vista_Admin() {
         setReportes((prev) => prev.map((r) => r.id === reporte.id ? { ...r, estado: nextEstado } : r));
       }
     } catch (err) {
-      console.error('Error al actualizar estado:', err);
       alert('Error al actualizar el estado del reporte');
     }
   };
@@ -251,7 +228,6 @@ function Vista_Admin() {
           </tbody>
         </table>
       )}
-      {/* Sección de Reportes */}
       <div className="admin-section" style={{ marginTop: '2rem' }}>
         <h2>Todos los Reportes</h2>
         <button 
@@ -273,7 +249,7 @@ function Vista_Admin() {
                 onClick={fetchReportes}
                 style={{ padding: '0.5rem 1rem' }}
               >
-                 Refrescar
+                  Refrescar
               </button>
             </div>
             
@@ -308,7 +284,7 @@ function Vista_Admin() {
                         <span className="fecha"> {reporte.fecha}</span>
                         <br />
                         <span className="user-info" style={{ fontSize: '0.85rem', color: '#666' }}>
-                           {reporte.userName || 'Usuario'}
+                            {reporte.userName || 'Usuario'}
                         </span>
                         {reporte.userEmail && (
                           <>
@@ -320,7 +296,7 @@ function Vista_Admin() {
                         )}
                       </div>
                       <span className="ttl" style={{ marginTop: '0.5rem', color: '#555', fontWeight: 600 }}>
-                         Se elimina en: {formatRemaining(calcRemainingMs(reporte.createdAt))}
+                          Se elimina en: {formatRemaining(calcRemainingMs(reporte.createdAt))}
                       </span>
                     </div>
                   </div>
@@ -331,23 +307,38 @@ function Vista_Admin() {
         )}
       </div>
 
-     
 
-      {/* Modal para mostrar/editar/eliminar usuario */}
       {selectedUser && (
         <div className="modal-overlay">
           <div className="modal-content">
             <h3>Perfil de Usuario</h3>
             <div>
               <div className="user-info">
-                <p><strong>Gmail:</strong> {selectedUser.gmail || '-'}</p>
+                <p><strong>Gmail:</strong> {selectedUser.gmail || selectedUser.email || '-'}</p>
                 <p><strong>Nombre registrado:</strong> {selectedUser.displayName || `${(selectedUser.nombre || '')} ${(selectedUser.apellido || '')}`.trim() || '-'}</p>
                 <p><strong>Nombre completo:</strong> {`${selectedUser.nombre || ''} ${selectedUser.apellido || ''}`.trim() || '-'}</p>
                 <p><strong>DNI:</strong> {selectedUser.dni || '-'}</p>
                 <p><strong>Legajo:</strong> {selectedUser.legajo || '-'}</p>
                 <p><strong>Rol:</strong> {selectedUser.rol || (String(selectedUser.role || '').toLowerCase() === 'admin' ? 'Admin' : 'Usuario')}</p>
+                <p><strong>Estado:</strong> {selectedUser.estado || 'Activo'}</p>
               </div>
               <div className="modal-buttons">
+                <button 
+                    className="btn-primary" 
+                    onClick={() => alternarRol(selectedUser).then(() => setSelectedUser(null))}
+                    style={{ marginRight: '0.5rem' }}
+                >
+                    {(selectedUser.rol || (String(selectedUser.role || '').toLowerCase() === 'admin' ? 'Admin' : 'Usuario')) === 'Admin' ? 'Quitar Admin' : 'Hacer Admin'}
+                </button>
+
+                <button 
+                    className="btn-secondary" 
+                    onClick={() => alternarBaja(selectedUser).then(() => setSelectedUser(null))}
+                    style={{ marginRight: '0.5rem' }}
+                >
+                    {(String(selectedUser.estado || '').toLowerCase() === 'baja') ? 'Activar Usuario' : 'Dar de Baja'}
+                </button>
+
                 <button className="btn-danger" onClick={eliminarUsuario}>Eliminar</button>
                 <button className="btn-cancel" onClick={cerrarModal}>Cerrar</button>
               </div>
