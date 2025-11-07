@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
-import googlefoto from '../imagenes/googleFoto.jpg';
+const googlefoto = 'https://developers.google.com/identity/images/g-logo.png';
 import { auth, db } from '../firebase/config';
 import { signInWithPopup, signInWithRedirect, GoogleAuthProvider, createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc, setDoc, collection, getDocs } from 'firebase/firestore';

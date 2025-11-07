@@ -7,7 +7,7 @@ import ChatBot from "./components/ChatBot/ChatBot";
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/AppLimpieza">
       <Routes>
         <Route path="/" element={<FRMregistro />} />
         <Route path="/usuario" element={<VistaUsuario />} />
