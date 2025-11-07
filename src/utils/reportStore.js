@@ -216,6 +216,5 @@ export const reportStore = {
   saveReports,
   addReport,
   updateReport,
-  pruneOldReports,
   clearAllReports,
 };
