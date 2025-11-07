@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import VistaAdmin from './views/admin/VistaAdmin';
 import VistaUsuario from './views/usuario/VistaUsuario';
 import './App.css';
@@ -29,15 +29,27 @@ function App() {
         console.error('Error en redirección:', error);
       });
   }, []);
+  
+  const basename = React.useMemo(() => {
+    const url = process.env.PUBLIC_URL || '';
+    try {
+      const u = new URL(url, window.location.origin);
+      return u.pathname || '/';
+    } catch {
+      return url || '/';
+    }
+  }, []);
   return (
     <AuthProvider>
-    <Router>
+    <Router basename={basename}>
       <div className="App">
         <ThemeToggle />
         <Routes>
           <Route path="/" element={<FRMRegistre />} />
           <Route path="/admin" element={<VistaAdmin />} />
           <Route path="/usuario" element={<VistaUsuario />} />
+          <Route path="/AppLimpieza/*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
     </Router>
