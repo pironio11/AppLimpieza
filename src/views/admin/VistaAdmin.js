@@ -344,8 +344,6 @@ function Vista_Admin() {
                 >
                     {(String(selectedUser.estado || '').toLowerCase() === 'baja') ? 'Activar Usuario' : 'Dar de Baja'}
                 </button>
-
-                <button className="boton-peligro" onClick={eliminarUsuario}>Eliminar</button>
                 <button className="boton-cancelar" onClick={cerrarModal}>Cerrar</button>
               </div>
             </div>
