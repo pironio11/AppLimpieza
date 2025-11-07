@@ -187,11 +187,11 @@ function Vista_Admin() {
   };
 
   return (
-    <div className="vista-administrador">
+    <div className="vista-admin">
       <Usuario />
       <h2>Lista de Usuarios</h2>
       {loading ? (
-        <p className="cargando">Cargando</p>
+        <p className="loading">Cargando</p>
       ) : (
         <table className="tabla-usuarios">
           <thead>
@@ -228,10 +228,10 @@ function Vista_Admin() {
           </tbody>
         </table>
       )}
-          <div className="seccion-admin" style={{ marginTop: '2rem' }}>
+          <div className="admin-section" style={{ marginTop: '2rem' }}>
         <h2>Todos los Reportes</h2>
         <button 
-          className="boton-alternar-seccion"
+          className="btn-alternar-seccion"
           onClick={() => setShowReportes(!showReportes)}
           style={{ marginBottom: '1rem' }}
         >
@@ -245,7 +245,7 @@ function Vista_Admin() {
                 Total de reportes: <strong>{reportes.length}</strong>
               </p>
               <button 
-                className="boton-nuevo-reporte"
+                className="btn-nuevo-reporte"
                 onClick={fetchReportes}
                 style={{ padding: '0.5rem 1rem' }}
               >
@@ -263,7 +263,7 @@ function Vista_Admin() {
               <div className="reportes-grid">
                 {reportes.map((reporte) => (
                   <div
-                    key={reporte.id}
+                    key={reporte}
                     className={`reporte-card ${reporte.estado.toLowerCase().replace(' ', '-')}`}
                     onClick={() => handleToggleEstado(reporte)}
                     title="Click para cambiar estado (Solo admins)"
