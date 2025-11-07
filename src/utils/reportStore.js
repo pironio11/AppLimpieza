@@ -43,11 +43,22 @@ export function now() {
   return Date.now();
 }
 
-export function pruneOldReports(list) {
+// Helpers de expiración (no borran, solo marcan/filtran para visualización)
+export function isExpired(createdAtMs) {
+  if (typeof createdAtMs !== 'number') return false;
   const cutoff = now() - getTTLms();
-  return (Array.isArray(list) ? list : []).filter(r =>
-    r && typeof r.createdAt === 'number' && r.createdAt >= cutoff
-  );
+  return createdAtMs < cutoff;
+}
+
+export function markExpiration(list) {
+  const arr = Array.isArray(list) ? list : [];
+  return arr.map(r => (r ? { ...r, expired: isExpired(r.createdAt) } : r));
+}
+
+export function filterVisible(list) {
+  // Ocultar/neutralizar elementos expirados en la vista
+  const arr = Array.isArray(list) ? list : [];
+  return arr.filter(r => r && !isExpired(r.createdAt));
 }
 
 // Cargar reportes desde Firestore
@@ -79,12 +90,11 @@ export async function loadReports(userId = null) {
         createdAt: data.createdAt?.toMillis ? data.createdAt.toMillis() : data.createdAt || now()
       });
     });
-    
-    // Filtrar reportes expirados
-    const pruned = pruneOldReports(reportes);
-    
-    console.debug('[reportStore] load count=', reportes.length, ' -> pruned.count=', pruned.length);
-    return pruned;
+    // No borrar datos: solo marcar y ocultar expirados en la respuesta de vista
+    const marked = markExpiration(reportes);
+    const visible = filterVisible(marked);
+    console.debug('[reportStore] load count=', reportes.length, ' -> visible.count=', visible.length);
+    return visible;
   } catch (e) {
     console.warn('No se pudieron cargar reportes desde Firestore:', e);
     // Fallback a localStorage en caso de error
@@ -105,7 +115,9 @@ function loadReportsFromLocalStorage() {
       }
       return r;
     });
-    return pruneOldReports(withCreatedAt);
+    // No borrar almacenado. Marcar expiración y devolver solo visibles para la UI
+    const marked = markExpiration(withCreatedAt);
+    return filterVisible(marked);
   } catch (e) {
     console.warn('No se pudieron cargar reportes desde localStorage:', e);
     return [];
@@ -114,9 +126,10 @@ function loadReportsFromLocalStorage() {
 
 export function saveReports(list) {
   try {
-    const cleaned = pruneOldReports(list);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(cleaned));
-    console.debug('[reportStore] save count=', cleaned.length);
+    // Guardar sin borrar por TTL: mantener histórico local completo
+    const arr = Array.isArray(list) ? list : [];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+    console.debug('[reportStore] save count=', arr.length);
   } catch (e) {
     console.warn('No se pudieron guardar reportes:', e);
   }
