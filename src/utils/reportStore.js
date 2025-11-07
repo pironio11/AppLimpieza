@@ -7,7 +7,6 @@ import {
   getDocs, 
   doc, 
   updateDoc, 
-  deleteDoc,
   query,
   where,
   orderBy,
@@ -198,25 +197,12 @@ export async function updateReport(id, patchOrUpdater) {
   }
 }
 
-// Eliminar reporte de Firestore
-export async function deleteReport(id) {
-  try {
-    const reportRef = doc(db, REPORTES_COLLECTION, id);
-    await deleteDoc(reportRef);
-    console.debug('[reportStore] delete id=', id);
-    return true;
-  } catch (e) {
-    console.error('Error al eliminar reporte de Firestore:', e);
-    return false;
-  }
-}
 
 export const reportStore = {
   loadReports,
   saveReports,
   addReport,
   updateReport,
-  deleteReport,
   pruneOldReports,
   clearAllReports,
 };

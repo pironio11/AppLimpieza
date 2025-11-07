@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
-import { collection, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, updateDoc } from 'firebase/firestore';
+
 import { db } from '../../firebase/config';
 import Usuario from '../../componentes/usuario';
 import './VistaAdmin.css';
@@ -26,10 +27,6 @@ const servicioUsuarios = {
   },
   async update({ id, data }) {
     await updateDoc(doc(db, 'usuarios', id), data);
-    return true;
-  },
-  async delete({ id }) {
-    await deleteDoc(doc(db, 'usuarios', id));
     return true;
   },
 };
@@ -98,17 +95,7 @@ function Vista_Admin() {
     setSelectedUser(null);
   };
 
-  const eliminarUsuario = async () => {
-    if (window.confirm('¿Seguro que quieres eliminar este usuario?')) {
-      try {
-        await servicioUsuarios.delete({ id: selectedUser.id });
-        cerrarModal();
-        cargarUsuarios();
-      } catch (err) {
-        alert('Error al eliminar usuario');
-      }
-    }
-  };
+  // Eliminación deshabilitada por política: no se borra nada de la base de datos.
 
   const alternarRol = async (u) => {
     const actual = u.rol || (String(u.role || '').toLowerCase() === 'admin' ? 'Admin' : 'Usuario');
@@ -296,7 +283,7 @@ function Vista_Admin() {
                         )}
                       </div>
                       <span className="ttl" style={{ marginTop: '0.5rem', color: '#555', fontWeight: 600 }}>
-                          Se elimina en: {formatRemaining(calcRemainingMs(reporte.createdAt))}
+                          Expira en: {formatRemaining(calcRemainingMs(reporte.createdAt))}
                       </span>
                     </div>
                   </div>
