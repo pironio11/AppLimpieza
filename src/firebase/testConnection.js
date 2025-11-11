@@ -14,9 +14,8 @@ export const testFirebaseConnection = async () => {
     const querySnapshot = await getDocs(collection(db, '_test_connection'));
     console.log('✅ Prueba de lectura exitosa, documentos encontrados:', querySnapshot.size);
 
-    // 3. Limpieza: eliminar el documento de prueba
-    await deleteDoc(doc(db, '_test_connection', testDoc.id));
-    console.log('✅ Prueba de eliminación exitosa');
+    // 3. Política: no se elimina el documento de prueba.
+    console.log('ℹ️ Política activa: no se eliminan documentos de prueba');
 
     return true;
   } catch (error) {
